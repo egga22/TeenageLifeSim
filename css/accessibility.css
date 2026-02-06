@@ -1,0 +1,143 @@
+/* =============================================
+   ACCESSIBILITY STYLESHEET
+   ============================================= */
+
+/* ---- Font Size Variants ---- */
+.font-small { --font-size-base: 14px; }
+.font-medium { --font-size-base: 16px; }
+.font-large { --font-size-base: 19px; }
+.font-xlarge { --font-size-base: 22px; }
+
+/* ---- High Contrast ---- */
+.contrast-high {
+    --bg: #ffffff;
+    --bg-card: #ffffff;
+    --text: #000000;
+    --text-light: #333333;
+    --border: #000000;
+    --primary: #0000cc;
+    --primary-dark: #000099;
+    --primary-light: #6666ff;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.contrast-high .btn {
+    border: 2px solid #000;
+}
+
+.contrast-high .stat-bar-container {
+    border: 1px solid #000;
+}
+
+.contrast-high .choice-btn {
+    border-width: 3px;
+}
+
+/* ---- Dark Mode ---- */
+.contrast-dark {
+    --bg: #1a1a2e;
+    --bg-card: #16213e;
+    --bg-dark: #0f0f1a;
+    --text: #e8e8e8;
+    --text-light: #aaaaaa;
+    --border: #333355;
+    --shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.contrast-dark .choice-btn {
+    background: var(--bg-dark);
+}
+
+.contrast-dark .stats-bar {
+    background: var(--bg-card);
+    border-bottom-color: var(--border);
+}
+
+.contrast-dark .setting-row select,
+.contrast-dark .char-section input,
+.contrast-dark .char-section select {
+    background: var(--bg-dark);
+    color: var(--text);
+    border-color: var(--border);
+}
+
+/* ---- Dyslexia-Friendly Font ---- */
+.dyslexia-font {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', 'Arial', sans-serif !important;
+    letter-spacing: 0.05em;
+    word-spacing: 0.15em;
+}
+
+.dyslexia-font * {
+    font-family: inherit !important;
+}
+
+/* ---- Reduce Motion ---- */
+.reduce-motion * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+}
+
+/* ---- Screen Reader Mode ---- */
+.screenreader-mode .stat-label {
+    display: inline !important;
+}
+
+.screenreader-mode .stat-icon {
+    display: none;
+}
+
+.screenreader-mode .choice-btn::before {
+    content: attr(data-index) ". ";
+    font-weight: 700;
+}
+
+/* ---- Focus Indicators ---- */
+:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    z-index: 9999;
+    border-radius: 0 0 var(--radius-small) 0;
+    font-weight: 600;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Visually Hidden (for screen readers) */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---- Difficulty Visual Indicators ---- */
+.difficulty-hard .choice-btn.choice-timed::after {
+    animation-duration: 8s;
+}
+
+.difficulty-normal .choice-btn.choice-timed::after {
+    animation-duration: 15s;
+}
+
+.difficulty-easy .choice-btn.choice-timed::after {
+    animation-duration: 25s;
+}

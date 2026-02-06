@@ -1,0 +1,355 @@
+/* =============================================
+   MINIGAMES STYLESHEET
+   ============================================= */
+
+.minigame-container {
+    max-width: 700px;
+    width: 100%;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow);
+    animation: slideUp 0.4s ease;
+}
+
+.minigame-title {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+    font-size: 1.6rem;
+}
+
+.minigame-area {
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.minigame-status {
+    text-align: center;
+    margin-top: 1rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+/* ---- Quiz Minigame ---- */
+.quiz-question {
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 500px;
+}
+
+.quiz-option {
+    padding: 0.85rem 1.2rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-small);
+    background: var(--bg);
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 1rem;
+    font-family: var(--font-main);
+    text-align: left;
+    touch-action: manipulation;
+}
+
+.quiz-option:hover {
+    border-color: var(--primary);
+    background: rgba(108, 92, 231, 0.05);
+}
+
+.quiz-option.correct {
+    border-color: var(--success);
+    background: rgba(0, 184, 148, 0.15);
+    color: var(--success);
+}
+
+.quiz-option.wrong {
+    border-color: var(--danger);
+    background: rgba(214, 48, 49, 0.15);
+    color: var(--danger);
+}
+
+.quiz-progress {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.quiz-timer {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+/* ---- Typing Minigame ---- */
+.typing-prompt {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--bg);
+    border-radius: var(--radius-small);
+    text-align: center;
+    word-break: break-word;
+}
+
+.typing-prompt .typed-correct {
+    color: var(--success);
+}
+
+.typing-prompt .typed-wrong {
+    color: var(--danger);
+    text-decoration: underline;
+}
+
+.typing-prompt .typed-remaining {
+    color: var(--text-light);
+}
+
+.typing-input {
+    width: 100%;
+    max-width: 500px;
+    padding: 0.8rem 1rem;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-small);
+    font-size: 1.1rem;
+    font-family: var(--font-main);
+    text-align: center;
+    background: var(--bg-card);
+    color: var(--text);
+}
+
+.typing-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.typing-stats {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+/* ---- Memory Match Minigame ---- */
+.memory-grid {
+    display: grid;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.memory-grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.memory-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.memory-card {
+    aspect-ratio: 1;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-small);
+    background: var(--primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: transparent;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+    min-height: 60px;
+}
+
+.memory-card:hover {
+    transform: scale(1.05);
+}
+
+.memory-card.flipped {
+    background: var(--bg-card);
+    color: var(--text);
+    border-color: var(--primary);
+}
+
+.memory-card.matched {
+    background: rgba(0, 184, 148, 0.15);
+    border-color: var(--success);
+    color: var(--text);
+    cursor: default;
+}
+
+.memory-card.matched:hover {
+    transform: none;
+}
+
+/* ---- Reaction Time Minigame ---- */
+.reaction-box {
+    width: 100%;
+    max-width: 400px;
+    height: 200px;
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+.reaction-box.waiting {
+    background: var(--danger);
+}
+
+.reaction-box.ready {
+    background: var(--success);
+}
+
+.reaction-box.result {
+    background: var(--primary);
+}
+
+/* ---- Catch Game ---- */
+.catch-area {
+    width: 100%;
+    max-width: 500px;
+    height: 300px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--border);
+    touch-action: none;
+}
+
+.catch-item {
+    position: absolute;
+    font-size: 1.8rem;
+    transition: top 0.1s linear;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.catch-basket {
+    position: absolute;
+    bottom: 10px;
+    font-size: 2rem;
+    transition: left 0.05s linear;
+}
+
+.catch-score {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ---- Number Puzzle ---- */
+.number-puzzle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    gap: 4px;
+    margin: 0 auto;
+}
+
+.number-tile {
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-small);
+    background: var(--primary);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: var(--font-main);
+}
+
+.number-tile:hover {
+    transform: scale(1.05);
+    background: var(--primary-dark);
+}
+
+.number-tile.empty {
+    background: transparent;
+    border-color: transparent;
+    cursor: default;
+}
+
+.number-tile.empty:hover {
+    transform: none;
+}
+
+/* ---- Minigame Results ---- */
+.minigame-results {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.minigame-results h3 {
+    font-size: 1.5rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.minigame-results .result-grade {
+    font-size: 3rem;
+    margin: 0.5rem 0;
+}
+
+.minigame-results .result-detail {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 500px) {
+    .minigame-container {
+        padding: 1.25rem;
+    }
+
+    .memory-card {
+        font-size: 1.3rem;
+        min-height: 50px;
+    }
+
+    .number-puzzle-grid {
+        grid-template-columns: repeat(3, 60px);
+    }
+
+    .number-tile {
+        width: 60px;
+        height: 60px;
+        font-size: 1.2rem;
+    }
+
+    .catch-area {
+        height: 220px;
+    }
+}

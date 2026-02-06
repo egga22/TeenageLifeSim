@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Teenage Life Sim — High School Story</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/minigames.css">
+    <link rel="stylesheet" href="css/accessibility.css">
+    <meta name="description" content="An interactive story simulation game about navigating high school life.">
+    <meta name="theme-color" content="#6c5ce7">
+</head>
+<body class="theme-default difficulty-normal font-medium contrast-normal" role="application" aria-label="Teenage Life Sim Game">
+
+    <!-- ==================== TITLE SCREEN ==================== -->
+    <div id="screen-title" class="screen active" role="main" aria-label="Title Screen">
+        <div class="title-container">
+            <h1 class="game-title" tabindex="0">🎓 Teenage Life Sim</h1>
+            <p class="game-subtitle">Navigate high school. Make choices. Shape your future.</p>
+            <div class="title-buttons">
+                <button class="btn btn-primary btn-large" id="btn-new-game" aria-label="Start a new game">New Game</button>
+                <button class="btn btn-secondary btn-large" id="btn-continue" aria-label="Continue saved game" style="display:none;">Continue</button>
+                <button class="btn btn-secondary btn-large" id="btn-tutorial" aria-label="Play the tutorial">Tutorial</button>
+                <button class="btn btn-secondary btn-large" id="btn-side-modes" aria-label="Side game modes">Side Modes</button>
+                <button class="btn btn-secondary btn-large" id="btn-achievements-title" aria-label="View achievements">Achievements</button>
+                <button class="btn btn-secondary btn-large" id="btn-settings-title" aria-label="Game settings">Settings</button>
+            </div>
+            <div class="version-info" aria-hidden="true">v1.0 — Made with ❤️</div>
+        </div>
+    </div>
+
+    <!-- ==================== CHARACTER CREATION ==================== -->
+    <div id="screen-character" class="screen" role="main" aria-label="Character Creation">
+        <div class="panel">
+            <h2>✏️ Create Your Character</h2>
+            <div class="char-creation-grid">
+                <div class="char-section">
+                    <label for="char-name">Name:</label>
+                    <input type="text" id="char-name" maxlength="20" placeholder="Enter your name..." aria-required="true">
+                </div>
+                <div class="char-section">
+                    <label for="char-pronouns">Pronouns:</label>
+                    <select id="char-pronouns" aria-label="Select pronouns">
+                        <option value="they">They/Them</option>
+                        <option value="he">He/Him</option>
+                        <option value="she">She/Her</option>
+                    </select>
+                </div>
+                <div class="char-section">
+                    <label for="char-style">Style:</label>
+                    <select id="char-style" aria-label="Select style">
+                        <option value="casual">🧥 Casual</option>
+                        <option value="preppy">👔 Preppy</option>
+                        <option value="punk">🎸 Punk</option>
+                        <option value="athletic">🏃 Athletic</option>
+                        <option value="artistic">🎨 Artistic</option>
+                    </select>
+                </div>
+                <div class="char-section">
+                    <label for="char-personality">Personality:</label>
+                    <select id="char-personality" aria-label="Select personality trait">
+                        <option value="outgoing">😄 Outgoing</option>
+                        <option value="shy">😊 Shy</option>
+                        <option value="ambitious">🔥 Ambitious</option>
+                        <option value="creative">✨ Creative</option>
+                        <option value="rebel">😎 Rebel</option>
+                    </select>
+                </div>
+                <div class="char-section">
+                    <label for="char-avatar">Avatar:</label>
+                    <div class="avatar-picker" id="avatar-picker" role="radiogroup" aria-label="Choose avatar">
+                        <button class="avatar-option selected" data-avatar="😀" role="radio" aria-checked="true" aria-label="Smiling face">😀</button>
+                        <button class="avatar-option" data-avatar="😎" role="radio" aria-checked="false" aria-label="Cool face">😎</button>
+                        <button class="avatar-option" data-avatar="🤓" role="radio" aria-checked="false" aria-label="Nerd face">🤓</button>
+                        <button class="avatar-option" data-avatar="😊" role="radio" aria-checked="false" aria-label="Happy face">😊</button>
+                        <button class="avatar-option" data-avatar="🤠" role="radio" aria-checked="false" aria-label="Cowboy face">🤠</button>
+                        <button class="avatar-option" data-avatar="🥳" role="radio" aria-checked="false" aria-label="Party face">🥳</button>
+                        <button class="avatar-option" data-avatar="😇" role="radio" aria-checked="false" aria-label="Angel face">😇</button>
+                        <button class="avatar-option" data-avatar="🧑‍🎤" role="radio" aria-checked="false" aria-label="Rockstar">🧑‍🎤</button>
+                    </div>
+                </div>
+                <div class="char-section">
+                    <label for="char-club">Club Interest:</label>
+                    <select id="char-club" aria-label="Select starting club interest">
+                        <option value="none">🤷 Undecided</option>
+                        <option value="sports">⚽ Sports</option>
+                        <option value="drama">🎭 Drama</option>
+                        <option value="science">🔬 Science</option>
+                        <option value="music">🎵 Music</option>
+                        <option value="art">🎨 Art</option>
+                        <option value="gaming">🎮 Gaming</option>
+                    </select>
+                </div>
+            </div>
+            <div class="char-preview" id="char-preview" aria-live="polite">
+                <div class="preview-avatar" id="preview-avatar">😀</div>
+                <div class="preview-name" id="preview-name">Student</div>
+            </div>
+            <div class="button-row">
+                <button class="btn btn-secondary" id="btn-back-title">Back</button>
+                <button class="btn btn-primary" id="btn-start-game">Begin Your Story</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN GAME SCREEN ==================== -->
+    <div id="screen-game" class="screen" role="main" aria-label="Main Game">
+        <!-- Top Stats Bar -->
+        <div class="stats-bar" id="stats-bar" aria-label="Character Stats">
+            <div class="stats-row">
+                <div class="stat" title="Academics">
+                    <span class="stat-icon" aria-hidden="true">📚</span>
+                    <span class="stat-label">Academics</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar" id="bar-academics" style="width:50%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="stat-value" id="val-academics">50</span>
+                </div>
+                <div class="stat" title="Social">
+                    <span class="stat-icon" aria-hidden="true">👥</span>
+                    <span class="stat-label">Social</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar" id="bar-social" style="width:50%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="stat-value" id="val-social">50</span>
+                </div>
+                <div class="stat" title="Energy">
+                    <span class="stat-icon" aria-hidden="true">⚡</span>
+                    <span class="stat-label">Energy</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar" id="bar-energy" style="width:80%" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="stat-value" id="val-energy">80</span>
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat" title="Stress">
+                    <span class="stat-icon" aria-hidden="true">😰</span>
+                    <span class="stat-label">Stress</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar stat-bar-danger" id="bar-stress" style="width:20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="stat-value" id="val-stress">20</span>
+                </div>
+                <div class="stat" title="Happiness">
+                    <span class="stat-icon" aria-hidden="true">😊</span>
+                    <span class="stat-label">Happiness</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar stat-bar-success" id="bar-happiness" style="width:70%" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="stat-value" id="val-happiness">70</span>
+                </div>
+                <div class="stat" title="Reputation">
+                    <span class="stat-icon" aria-hidden="true">⭐</span>
+                    <span class="stat-label">Reputation</span>
+                    <div class="stat-bar-container">
+                        <div class="stat-bar" id="bar-reputation" style="width:50%" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <span class="stat-value" id="val-reputation">50</span>
+                </div>
+            </div>
+            <div class="stats-meta">
+                <span id="game-day" class="meta-item">📅 Day 1</span>
+                <span id="game-period" class="meta-item">🕐 Morning</span>
+                <span id="game-money" class="meta-item">💰 $20</span>
+                <button class="btn btn-small btn-icon" id="btn-menu" aria-label="Open game menu" title="Menu">☰</button>
+            </div>
+        </div>
+
+        <!-- Story / Dialogue Area -->
+        <div class="game-content" id="game-content">
+            <div class="story-area" id="story-area" aria-live="polite" role="log">
+                <div class="story-text" id="story-text"></div>
+            </div>
+            <div class="speaker-area" id="speaker-area" style="display:none;">
+                <div class="speaker-avatar" id="speaker-avatar"></div>
+                <div class="speaker-name" id="speaker-name"></div>
+            </div>
+            <div class="choices-area" id="choices-area" role="group" aria-label="Choices"></div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div class="toast-container" id="toast-container" aria-live="assertive"></div>
+    </div>
+
+    <!-- ==================== MINIGAME SCREEN ==================== -->
+    <div id="screen-minigame" class="screen" role="main" aria-label="Minigame">
+        <div class="minigame-container" id="minigame-container">
+            <h2 class="minigame-title" id="minigame-title">Minigame</h2>
+            <div class="minigame-area" id="minigame-area"></div>
+            <div class="minigame-status" id="minigame-status" aria-live="polite"></div>
+        </div>
+    </div>
+
+    <!-- ==================== SETTINGS SCREEN ==================== -->
+    <div id="screen-settings" class="screen" role="main" aria-label="Settings">
+        <div class="panel settings-panel">
+            <h2>⚙️ Settings</h2>
+            <div class="settings-grid">
+                <div class="setting-group">
+                    <h3>🎮 Game</h3>
+                    <div class="setting-row">
+                        <label for="setting-difficulty">Difficulty:</label>
+                        <select id="setting-difficulty" aria-label="Difficulty level">
+                            <option value="easy">Easy — More forgiving stats, extra hints</option>
+                            <option value="normal" selected>Normal — Balanced experience</option>
+                            <option value="hard">Hard — Harsh stat penalties, timed choices</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="setting-autosave">Auto-save:</label>
+                        <input type="checkbox" id="setting-autosave" checked aria-label="Enable auto-save">
+                    </div>
+                    <div class="setting-row">
+                        <label for="setting-textspeed">Text Speed:</label>
+                        <select id="setting-textspeed" aria-label="Text animation speed">
+                            <option value="instant">Instant</option>
+                            <option value="fast">Fast</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="slow">Slow</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h3>♿ Accessibility</h3>
+                    <div class="setting-row">
+                        <label for="setting-fontsize">Font Size:</label>
+                        <select id="setting-fontsize" aria-label="Font size">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                            <option value="xlarge">Extra Large</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="setting-contrast">Contrast:</label>
+                        <select id="setting-contrast" aria-label="Contrast mode">
+                            <option value="normal" selected>Normal</option>
+                            <option value="high">High Contrast</option>
+                            <option value="dark">Dark Mode</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="setting-dyslexia">Dyslexia-Friendly Font:</label>
+                        <input type="checkbox" id="setting-dyslexia" aria-label="Enable dyslexia friendly font">
+                    </div>
+                    <div class="setting-row">
+                        <label for="setting-reduce-motion">Reduce Motion:</label>
+                        <input type="checkbox" id="setting-reduce-motion" aria-label="Reduce animations">
+                    </div>
+                    <div class="setting-row">
+                        <label for="setting-screenreader">Screen Reader Mode:</label>
+                        <input type="checkbox" id="setting-screenreader" aria-label="Optimize for screen readers">
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h3>🎨 Theme</h3>
+                    <div class="setting-row">
+                        <label for="setting-theme">Color Theme:</label>
+                        <select id="setting-theme" aria-label="Color theme">
+                            <option value="default">🌈 Default</option>
+                            <option value="ocean">🌊 Ocean</option>
+                            <option value="forest">🌲 Forest</option>
+                            <option value="sunset">🌅 Sunset</option>
+                            <option value="midnight">🌙 Midnight</option>
+                            <option value="pastel">🍬 Pastel</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <h3>💾 Data</h3>
+                    <div class="button-row">
+                        <button class="btn btn-secondary" id="btn-export-save">Export Save</button>
+                        <button class="btn btn-secondary" id="btn-import-save">Import Save</button>
+                        <button class="btn btn-danger" id="btn-delete-save">Delete All Saves</button>
+                    </div>
+                    <input type="file" id="import-file-input" accept=".json" style="display:none" aria-hidden="true">
+                </div>
+            </div>
+            <div class="button-row">
+                <button class="btn btn-primary" id="btn-settings-back">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ACHIEVEMENTS SCREEN ==================== -->
+    <div id="screen-achievements" class="screen" role="main" aria-label="Achievements">
+        <div class="panel">
+            <h2>🏆 Achievements</h2>
+            <div class="achievement-stats" id="achievement-stats" aria-live="polite"></div>
+            <div class="achievement-list" id="achievement-list" role="list"></div>
+            <div class="button-row">
+                <button class="btn btn-primary" id="btn-achievements-back">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SIDE MODES SCREEN ==================== -->
+    <div id="screen-sidemodes" class="screen" role="main" aria-label="Side Modes">
+        <div class="panel">
+            <h2>🎯 Side Modes</h2>
+            <div class="side-modes-grid">
+                <div class="side-mode-card" tabindex="0">
+                    <h3>🏖️ Sandbox Mode</h3>
+                    <p>Free play with no story constraints. Explore all options, max stats, and experiment freely.</p>
+                    <button class="btn btn-primary" id="btn-sandbox">Play Sandbox</button>
+                </div>
+                <div class="side-mode-card" tabindex="0">
+                    <h3>⏱️ Speed Run</h3>
+                    <p>Race against the clock! Complete a full school week as fast as possible.</p>
+                    <button class="btn btn-primary" id="btn-speedrun">Play Speed Run</button>
+                </div>
+                <div class="side-mode-card" tabindex="0">
+                    <h3>🎲 Random Challenge</h3>
+                    <p>Random character, random events, random choices. Survive the chaos!</p>
+                    <button class="btn btn-primary" id="btn-random-challenge">Play Random</button>
+                </div>
+                <div class="side-mode-card" tabindex="0">
+                    <h3>📊 What-If Simulator</h3>
+                    <p>See how different choices affect your story outcomes. Replay key moments.</p>
+                    <button class="btn btn-primary" id="btn-whatif">Play What-If</button>
+                </div>
+            </div>
+            <div class="button-row">
+                <button class="btn btn-secondary" id="btn-sidemodes-back">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ENDING SCREEN ==================== -->
+    <div id="screen-ending" class="screen" role="main" aria-label="Game Ending">
+        <div class="panel ending-panel">
+            <div class="ending-icon" id="ending-icon">🎓</div>
+            <h2 class="ending-title" id="ending-title">The End</h2>
+            <p class="ending-text" id="ending-text"></p>
+            <div class="ending-stats" id="ending-stats"></div>
+            <div class="button-row">
+                <button class="btn btn-primary btn-large" id="btn-play-again">Play Again</button>
+                <button class="btn btn-secondary btn-large" id="btn-ending-achievements">View Achievements</button>
+                <button class="btn btn-secondary btn-large" id="btn-ending-title">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== GAME MENU OVERLAY ==================== -->
+    <div id="overlay-menu" class="overlay" role="dialog" aria-label="Game Menu" aria-hidden="true">
+        <div class="overlay-content">
+            <h2>☰ Menu</h2>
+            <button class="btn btn-primary" id="btn-resume">Resume</button>
+            <button class="btn btn-secondary" id="btn-save-game">Save Game</button>
+            <button class="btn btn-secondary" id="btn-menu-settings">Settings</button>
+            <button class="btn btn-secondary" id="btn-menu-achievements">Achievements</button>
+            <button class="btn btn-danger" id="btn-quit">Quit to Title</button>
+        </div>
+    </div>
+
+    <!-- ==================== NOTIFICATION POPUP ==================== -->
+    <div id="achievement-popup" class="achievement-popup" aria-live="assertive" style="display:none;">
+        <div class="achievement-popup-content">
+            <span class="achievement-popup-icon" id="achievement-popup-icon">🏆</span>
+            <div>
+                <div class="achievement-popup-title">Achievement Unlocked!</div>
+                <div class="achievement-popup-name" id="achievement-popup-name"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/minigames.js"></script>
+    <script src="js/story.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

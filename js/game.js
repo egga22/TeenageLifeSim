@@ -159,14 +159,19 @@ const Game = {
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
+            // Don't intercept when typing in input fields
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+
             if (e.key === 'Escape') {
                 const menu = document.getElementById('overlay-menu');
                 if (menu.classList.contains('active')) {
                     Utils.hideOverlay('overlay-menu');
                 }
             }
-            // Number keys for choices
+            // Number keys for choices (only on game screen)
             if (e.key >= '1' && e.key <= '9') {
+                const gameScreen = document.getElementById('screen-game');
+                if (!gameScreen || !gameScreen.classList.contains('active')) return;
                 const choices = document.querySelectorAll('.choice-btn:not(:disabled)');
                 const idx = parseInt(e.key) - 1;
                 if (idx < choices.length) {

@@ -84,7 +84,7 @@ const Utils = {
         }, duration);
     },
 
-    /* Typewriter effect */
+    /* Typewriter effect — supports early cancellation via element.dataset.skip */
     async typeText(element, text, speed = 30) {
         element.textContent = '';
         const effectiveSpeed = Game && Game.settings ? 
@@ -96,6 +96,11 @@ const Utils = {
         }
         
         for (let i = 0; i < text.length; i++) {
+            // Check if parent wants to skip
+            if (element.closest && element.closest('.story-area, #story-text, .minigame-area')?.dataset.skip === 'true') {
+                element.textContent = text;
+                return;
+            }
             element.textContent += text[i];
             await new Promise(r => setTimeout(r, effectiveSpeed));
         }

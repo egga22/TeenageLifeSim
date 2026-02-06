@@ -528,26 +528,40 @@ const Game = {
         storyText.innerHTML = '';
         storyText.appendChild(textEl);
 
+        // Click-to-skip text animation
+        let skipText = false;
+        const skipHandler = () => { skipText = true; };
+        storyText.addEventListener('click', skipHandler, { once: true });
+
         // Dialogue
         const renderDialogue = () => {
             if (node.dialogue) {
                 const diaEl = document.createElement('div');
                 diaEl.className = 'story-segment dialogue';
                 storyText.appendChild(diaEl);
+                if (skipText) {
+                    diaEl.textContent = Story.processText(node.dialogue);
+                    return Promise.resolve();
+                }
                 return Utils.typeText(diaEl, Story.processText(node.dialogue));
             }
             return Promise.resolve();
         };
 
-        Utils.typeText(textEl, processedText).then(() => {
+        const typePromise = skipText ? 
+            Promise.resolve().then(() => { textEl.textContent = processedText; }) :
+            Utils.typeText(textEl, processedText);
+        
+        typePromise.then(() => {
+            if (skipText) textEl.textContent = processedText;
             return renderDialogue();
         }).then(() => {
+            storyText.removeEventListener('click', skipHandler);
             this.renderChoices(node, choicesArea);
+            // Scroll story area after all content rendered
+            const storyArea = document.getElementById('story-area');
+            storyArea.scrollTop = storyArea.scrollHeight;
         });
-
-        // Scroll story area into view
-        const storyArea = document.getElementById('story-area');
-        storyArea.scrollTop = storyArea.scrollHeight;
     },
 
     /* ---- Render Choices ---- */
@@ -567,10 +581,7 @@ const Game = {
             }
 
             let choiceHtml = Utils.escapeHtml(choice.text);
-            if (choice.hint && (this.settings.difficulty === 'easy' || diffMod.hintAvailable)) {
-                choiceHtml += `<span class="choice-hint">${Utils.escapeHtml(choice.hint)}</span>`;
-            }
-            // Always show hints for normal and easy, hide on hard unless available
+            // Show hints on Easy and Normal, hide on Hard
             if (choice.hint && this.settings.difficulty !== 'hard') {
                 choiceHtml += `<span class="choice-hint">${Utils.escapeHtml(choice.hint)}</span>`;
             }

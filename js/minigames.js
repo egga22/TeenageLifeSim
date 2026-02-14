@@ -463,7 +463,9 @@ const Minigames = {
             clearInterval(powerInterval);
             attempts++;
 
-            // Check if shot is good (power between 45-55% or 80-95%)
+            // Check if shot is good
+            // Sweet spot zone (45-55%): Perfect mid-range shot with ideal arc
+            // Power shot zone (80-95%): Strong shot with enough power but not too much
             const isGood = (powerLevel >= 45 && powerLevel <= 55) || (powerLevel >= 80 && powerLevel <= 95);
             
             if (isGood) {
@@ -564,7 +566,7 @@ const Minigames = {
             }
         };
 
-        document.addEventListener('keydown', (e) => {
+        const handleKeyPress = (e) => {
             if (!gameActive) return;
             const key = e.key.toLowerCase();
             const keyIndex = keys.indexOf(key);
@@ -585,12 +587,15 @@ const Minigames = {
                     }
                 }
             }
-        });
+        };
+
+        document.addEventListener('keydown', handleKeyPress);
 
         // Spawn notes at intervals
         const spawnInterval = setInterval(() => {
             if (!gameActive) {
                 clearInterval(spawnInterval);
+                document.removeEventListener('keydown', handleKeyPress);
                 return;
             }
             spawnNote();

@@ -690,9 +690,17 @@ const Game = {
         }
 
         if (choice.romanceLevel) {
-            const npc = this.player.flags.homecoming_alex ? 'alex' : 
-                        this.player.flags.homecoming_jordan ? 'jordan' :
-                        this.player.flags.homecoming_morgan ? 'morgan' : null;
+            // Find any active romance partner from flags or romance flags
+            let npc = null;
+            const romanceableNPCs = GameData.romanceableNPCs || ['alex', 'jordan', 'sam', 'riley', 'morgan', 'casey'];
+            
+            for (const character of romanceableNPCs) {
+                if (this.player.flags[`homecoming_${character}`] || this.player.romanceFlags[character]) {
+                    npc = character;
+                    break;
+                }
+            }
+            
             if (npc) {
                 this.player.romanceFlags[npc] = choice.romanceLevel;
             }

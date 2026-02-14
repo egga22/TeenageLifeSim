@@ -1314,6 +1314,13 @@ const Story = {
             text: "🌟 FOUR WEEKS COMPLETE!\n\nYou've:\n• Survived your first month of high school\n• Made lasting friendships\n• Possibly found romance\n• Joined clubs and developed skills\n• Attended Homecoming Dance\n• Survived Parent-Teacher Night\n• Conquered Midterm Exams\n\nThe school year continues, but this marks a major milestone!\n\nWinter break approaches, Year 2 awaits, and your legend is just beginning...",
             effects: { happiness: 30, confidence: 20 },
             onEnter: () => {
+                // Update week and day
+                if (Game) {
+                    Game.week = 5;
+                    Game.day = 21;
+                }
+                
+                // Display stats in story text
                 const storyText = document.getElementById('story-text');
                 if (Game && Game.player && storyText) {
                     const statsText = `\n\n💰 Money: $${Game.player.money}\n📚 Academics: ${Game.player.stats.academics}\n👥 Social: ${Game.player.stats.social}\n😊 Happiness: ${Game.player.stats.happiness}\n⭐ Reputation: ${Game.player.stats.reputation}`;
@@ -1323,13 +1330,7 @@ const Story = {
             },
             choices: [
                 { text: "📊 View my final stats and ending", effects: {}, next: '_ENDING' }
-            ],
-            onEnter: () => {
-                if (Game) {
-                    Game.week = 5;
-                    Game.day = 21;
-                }
-            }
+            ]
         },
 
         /* ==================== SANDBOX NODES ==================== */

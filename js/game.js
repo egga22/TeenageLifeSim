@@ -660,12 +660,74 @@ const Game = {
             this.applyEffects(choice.effects);
         }
 
+        // Handle money addition (for jobs)
+        if (choice.addMoney) {
+            this.player.money = Math.max(0, this.player.money + choice.addMoney);
+            Utils.toast(`💰 +$${choice.addMoney}!`, 'success');
+            this.updateStatsUI();
+        }
+
+        // Handle flags
+        if (choice.setFlag) {
+            this.player.flags[choice.setFlag] = true;
+            console.log('Flag set:', choice.setFlag);
+        }
+
+        // Handle skill points
+        if (choice.addSkillPoint && this.clubsJoined.size > 0) {
+            const club = Array.from(this.clubsJoined)[0];
+            if (!this.player.skills[club]) this.player.skills[club] = 0;
+            this.player.skills[club] += choice.addSkillPoint;
+            Utils.toast(`⭐ Skill level up! (${this.player.skills[club]})`, 'success');
+        }
+
+        // Handle romance
+        if (choice.romanceStart) {
+            if (!this.player.romanceFlags[choice.romanceStart]) {
+                this.player.romanceFlags[choice.romanceStart] = 'interested';
+                Utils.toast('💕 Romance path unlocked!', 'success');
+            }
+        }
+
+        if (choice.romanceLevel) {
+            const npc = this.player.flags.homecoming_alex ? 'alex' : 
+                        this.player.flags.homecoming_jordan ? 'jordan' :
+                        this.player.flags.homecoming_morgan ? 'morgan' : null;
+            if (npc) {
+                this.player.romanceFlags[npc] = choice.romanceLevel;
+            }
+        }
+
+        if (choice.romanceProgress && this.player.romanceFlags) {
+            // Progress any active romance
+            const activeRomances = Object.keys(this.player.romanceFlags);
+            if (activeRomances.length > 0) {
+                Utils.toast('💕 Your relationship deepens...', 'success');
+            }
+        }
+
+        // Handle relationship improvements
+        if (choice.improveRelationship) {
+            if (!this.player.relationships[choice.improveRelationship]) {
+                this.player.relationships[choice.improveRelationship] = 0;
+            }
+            this.player.relationships[choice.improveRelationship] = Math.min(100, 
+                this.player.relationships[choice.improveRelationship] + 10);
+            
+            const npcName = GameData.characters[choice.improveRelationship]?.name || 'Friend';
+            Utils.toast(`🤝 ${npcName} relationship improved!`, 'success');
+        }
+
         // Handle club joining
         if (choice.clubJoin) {
             this.clubsJoined.add(choice.clubJoin);
             const club = GameData.clubs[choice.clubJoin];
             if (club) {
                 Utils.toast(`🏅 Joined ${club.name}!`, 'success');
+                // Initialize skill tree for this club
+                if (!this.player.skills[choice.clubJoin]) {
+                    this.player.skills[choice.clubJoin] = 0;
+                }
             }
             if (this.clubsJoined.size >= 6) Achievements.unlock('all_clubs');
         }
@@ -673,8 +735,8 @@ const Game = {
         // Advance day if needed
         if (choice.advanceDay) {
             this.day++;
+            this.week = Math.floor((this.day - 1) / 5) + 1;
             this.period = 0;
-            document.getElementById('game-day').textContent = `📅 Day ${this.day}`;
         }
 
         // Trigger minigame or next node

@@ -601,11 +601,716 @@ const Story = {
         },
 
         day5_evening: {
-            text: "🌙 Friday evening. Week 1 is DONE!\n\nAs you sit in your room, you realize how much has changed in just five days. New friends, new challenges, new identity.\n\nThe weekend stretches ahead full of possibilities... and consequences.\n\n📊 Let's see how your first week went!",
+            text: "🌙 Friday evening. Week 1 is DONE!\n\nAs you sit in your room, you realize how much has changed in just five days. New friends, new challenges, new identity.\n\nThe weekend stretches ahead full of possibilities... and consequences.\n\nBut this is just the beginning... Week 2 awaits!",
             effects: { energy: 20, stress: -5 },
             choices: [
-                { text: "📊 View my final stats and ending", effects: {}, next: '_ENDING' }
+                { text: "🔄 Continue to Week 2", effects: {}, next: 'week2_day1_morning' }
+            ],
+            onEnter: () => {
+                if (Game) {
+                    Game.week = 2;
+                    Game.day = 6;
+                }
+            }
+        },
+
+        /* ==================== WEEK 2 - DAYS 6-10 ==================== */
+        week2_day1_morning: {
+            text: "🌅 Monday Morning — Week 2, Day 1\n\n*BEEP BEEP BEEP*\n\nYour alarm goes off. Week 2. You're no longer the new kid — you've got a routine, friends, and a reputation to maintain.\n\nToday there's buzz about the upcoming Homecoming Dance on Friday!",
+            effects: { energy: -5 },
+            choices: [
+                { text: "🎉 Check phone for Homecoming group chat", effects: { social: 5, stress: 3 }, next: 'week2_day1_homecoming_buzz' },
+                { text: "📚 Focus on school and ignore the hype", effects: { academics: 5, social: -3 }, next: 'week2_day1_class' },
+                { text: "💰 Think about how to earn money for a ticket", effects: {}, next: 'week2_day1_money_worry' }
             ]
+        },
+
+        week2_day1_homecoming_buzz: {
+            text: "📱 The group chat is EXPLODING with Homecoming talk!\n\n💬 Jordan: \"Who's going with who?? 👀\"\n💬 Riley: \"I'm designing my own outfit!\"\n💬 Sam: \"Tickets are $25... that's a lot of study snacks 😅\"\n💬 Morgan: \"Our team is planning a pre-dance meetup!\"\n\nYour phone buzzes with a DM...",
+            speaker: 'alex',
+            dialogue: "\"Yo! Want to go to Homecoming together? Not like DATE date, just... go as friends? Unless... 😳\"",
+            effects: { social: 5 },
+            choices: [
+                { text: "\"Definitely! Let's go together! 🎉\"", effects: { social: 10, happiness: 10 }, next: 'week2_day1_class', setFlag: 'homecoming_alex' },
+                { text: "\"Maybe... let me think about it?\"", effects: { stress: 5 }, next: 'week2_day1_class' },
+                { text: "\"I was hoping to ask someone else...\"", effects: { social: -5 }, next: 'week2_day1_class' }
+            ]
+        },
+
+        week2_day1_money_worry: {
+            text: "💭 $25 for a ticket, plus outfit, food... you're going to need more money.\n\nYou remember seeing a \"HELP WANTED\" sign at the local coffee shop. Part-time work could help, but it'll take time away from studying and clubs.",
+            effects: {},
+            choices: [
+                { text: "☕ Check out the coffee shop job", effects: {}, next: 'week2_job_cafe', setFlag: 'job_interested' },
+                { text: "📚 Look into tutoring jobs", effects: {}, next: 'week2_job_tutor', setFlag: 'job_interested' },
+                { text: "🏡 Offer to do lawn care on weekends", effects: {}, next: 'week2_job_lawn', setFlag: 'job_interested' },
+                { text: "💸 Just save what I have", effects: {}, next: 'week2_day1_class' }
+            ]
+        },
+
+        week2_job_cafe: {
+            text: "☕ The coffee shop manager interviews you!\n\n\"Can you work after school? Two hours, three days a week? $15 per shift, plus tips!\"",
+            effects: {},
+            choices: [
+                { text: "\"Yes! I'll take it!\"", effects: { happiness: 5, stress: 5 }, next: 'week2_day1_class', setFlag: 'job_cafe', addMoney: 15 },
+                { text: "\"Let me think about it...\"", effects: {}, next: 'week2_day1_class' }
+            ]
+        },
+
+        week2_job_tutor: {
+            text: "📚 You post a tutoring ad online. Within hours, a parent contacts you!\n\n\"Can you help my kid with math? $20 per session, twice a week?\"",
+            effects: {},
+            choices: [
+                { text: "\"Absolutely! I'm great at math!\"", effects: { happiness: 5, academics: 5 }, next: 'week2_day1_class', setFlag: 'job_tutor', addMoney: 20 },
+                { text: "\"Maybe... I need to think about it\"", effects: {}, next: 'week2_day1_class' }
+            ]
+        },
+
+        week2_job_lawn: {
+            text: "🏡 You offer to mow lawns for neighbors. Mr. Henderson immediately calls!\n\n\"I'll pay $25 if you mow my lawn this Saturday. It's hard work though!\"",
+            effects: {},
+            choices: [
+                { text: "\"Deal! I'll be there!\"", effects: { happiness: 5 }, next: 'week2_day1_class', setFlag: 'job_lawn', addMoney: 25 },
+                { text: "\"Let me check my schedule...\"", effects: {}, next: 'week2_day1_class' }
+            ]
+        },
+
+        week2_day1_class: {
+            text: "📝 Monday classes fly by. Your club is having its first real meeting today!\n\nThe club sponsor announces skill development opportunities — learn advanced techniques, compete in tournaments, or even teach others!",
+            effects: { academics: 5 },
+            choices: [
+                { text: "🌟 Sign up for advanced skill training", effects: { stress: 5 }, next: 'week2_skill_training', triggerMinigame: 'basketball' },
+                { text: "🤝 Focus on socializing with club members", effects: { social: 10, happiness: 5 }, next: 'week2_club_social' },
+                { text: "😴 This week is too much — skip today", effects: { energy: 10, reputation: -5 }, next: 'week2_day1_evening' }
+            ]
+        },
+
+        week2_skill_training: {
+            text: "⭐ You dive into skill training! The club mentor is impressed with your dedication.\n\n\"You're a natural! With practice, you could become one of our best members!\"",
+            effects: { academics: 5, reputation: 5 },
+            choices: [
+                { text: "💪 \"I want to master this!\"", effects: { stress: 5 }, next: 'week2_day1_evening', addSkillPoint: 1 },
+                { text: "😊 \"Thanks! I'm learning a lot!\"", effects: { happiness: 5 }, next: 'week2_day1_evening', addSkillPoint: 1 }
+            ],
+            onEnter: () => {
+                if (Game && Game.player && Game.clubsJoined.size > 0) {
+                    const club = Array.from(Game.clubsJoined)[0];
+                    if (!Game.player.skills[club]) Game.player.skills[club] = 0;
+                }
+            }
+        },
+
+        week2_club_social: {
+            text: "🎉 The club is so welcoming! You make connections, share laughs, and feel like you really belong.\n\nSomeone invites you to hang out outside of school!",
+            effects: { social: 10, happiness: 10 },
+            choices: [
+                { text: "\"Yes! Let's be friends!\"", effects: { social: 5 }, next: 'week2_day1_evening', improveRelationship: 'riley' },
+                { text: "\"Maybe! I'll let you know\"", effects: {}, next: 'week2_day1_evening' }
+            ]
+        },
+
+        week2_day1_evening: {
+            text: "🌆 Monday evening. You survived Week 2, Day 1!\n\nHomecoming is Friday. Four days to prepare, earn money, and figure out your date situation...",
+            effects: { energy: -10 },
+            choices: [
+                { text: "📚 Study for upcoming tests", effects: { academics: 10, energy: -10, stress: 5 }, next: 'week2_day2_morning', triggerMinigame: 'quiz' },
+                { text: "😴 Get rest for tomorrow", effects: { energy: 20, stress: -10 }, next: 'week2_day2_morning' },
+                { text: "🎮 Relax with games", effects: { happiness: 10, stress: -5, academics: -3 }, next: 'week2_day2_morning' }
+            ]
+        },
+
+        week2_day2_morning: {
+            text: "☀️ Tuesday Morning — Week 2, Day 2\n\nRomance is in the air! You notice Jordan and Sam having intense conversations. Riley is sketching constantly.\n\nAnd someone keeps looking at you in class...",
+            effects: {},
+            choices: [
+                { text: "👀 Try to figure out who's watching", effects: { social: 5 }, next: 'week2_romance_discover' },
+                { text: "📖 Ignore it and focus on class", effects: { academics: 5 }, next: 'week2_day2_class' },
+                { text: "💪 Focus on club skills", effects: {}, next: 'week2_day2_practice', triggerMinigame: 'music' }
+            ]
+        },
+
+        week2_romance_discover: {
+            text: "During lunch, you finally catch them — it's Morgan! They've been stealing glances at you all week.\n\nThey nervously approach your table...",
+            speaker: 'morgan',
+            dialogue: "\"Hey... um... are you going to Homecoming? Because, I was wondering... would you maybe want to go... with me?\"",
+            effects: { social: 5 },
+            choices: [
+                { text: "😊 \"I'd love to!\"", effects: { happiness: 15, social: 10 }, next: 'week2_day2_class', setFlag: 'homecoming_morgan', romanceStart: 'morgan' },
+                { text: "😅 \"I'm already going with someone...\"", effects: { social: -3 }, next: 'week2_day2_class' },
+                { text: "🤔 \"Can I think about it?\"", effects: { stress: 5 }, next: 'week2_day2_class' }
+            ]
+        },
+
+        week2_day2_practice: {
+            text: "🎯 Practice session! Your skills are improving rapidly.\n\nThe coach/sponsor notices your dedication and offers you a chance to represent the club at a school exhibition!",
+            effects: { reputation: 10, stress: 5 },
+            choices: [
+                { text: "🌟 \"I'll do it!\"", effects: { stress: 10, reputation: 5 }, next: 'week2_day2_class', setFlag: 'exhibition_participant', addSkillPoint: 2 },
+                { text: "😰 \"That's too much pressure...\"", effects: { stress: -5 }, next: 'week2_day2_class' }
+            ]
+        },
+
+        week2_day2_class: {
+            text: "📝 Afternoon classes. Teachers announce that Parent-Teacher Night is scheduled for Week 3!\n\nYour stomach drops. Your parents will meet ALL your teachers and see ALL your grades...",
+            effects: { stress: 10 },
+            choices: [
+                { text: "😰 Panic about grades", effects: { stress: 10, academics: -5 }, next: 'week2_day2_evening' },
+                { text: "💪 Use this as motivation to study harder", effects: { academics: 10, stress: 5 }, next: 'week2_day2_evening', triggerMinigame: 'coding' },
+                { text: "🤷 My grades are fine, no worries", effects: { stress: -5 }, next: 'week2_day2_evening' }
+            ]
+        },
+
+        week2_day2_evening: {
+            text: "🌙 Tuesday evening. Three days until Homecoming!\n\nYour phone buzzes with various messages from friends making plans...",
+            effects: {},
+            choices: [
+                { text: "👗 Shop for Homecoming outfit", effects: { money: -15, happiness: 10, reputation: 5 }, next: 'week2_day3_morning', requiresMoney: 15 },
+                { text: "💪 Work out / practice skills", effects: { energy: -10, stress: -5 }, next: 'week2_day3_morning', addSkillPoint: 1 },
+                { text: "📱 Chat with friends online", effects: { social: 8, happiness: 5 }, next: 'week2_day3_morning', improveRelationship: 'alex' }
+            ]
+        },
+
+        week2_day3_morning: {
+            text: "☀️ Wednesday Morning — Week 2, Day 3\n\nHALFWAY THROUGH THE WEEK!\n\nThe Homecoming Dance committee has decorated the hallways with banners and balloons. The excitement is palpable!",
+            effects: { happiness: 5 },
+            choices: [
+                { text: "🎨 Help with decorations", effects: { social: 10, happiness: 10, reputation: 5 }, next: 'week2_day3_decorations' },
+                { text: "📚 Study in the library", effects: { academics: 10, social: -5 }, next: 'week2_day3_study' },
+                { text: "🎵 Practice with club", effects: { stress: -5 }, next: 'week2_day3_practice', triggerMinigame: 'music' }
+            ]
+        },
+
+        week2_day3_decorations: {
+            text: "🎨 You help the committee hang streamers and arrange lights. It's actually really fun!\n\nRiley is there, creating amazing art for the backdrop.",
+            speaker: 'riley',
+            dialogue: "\"You've got great taste! Want to help me finish this? We could hang out more often...\"",
+            effects: { social: 5, happiness: 5 },
+            choices: [
+                { text: "😊 \"I'd love that!\"", effects: { social: 10, happiness: 10 }, next: 'week2_day3_afternoon', romanceStart: 'riley', improveRelationship: 'riley' },
+                { text: "🙂 \"Sure, that sounds nice\"", effects: { social: 5 }, next: 'week2_day3_afternoon' }
+            ]
+        },
+
+        week2_day3_study: {
+            text: "📚 The library is peaceful. Sam is there, surrounded by books and notes.\n\nThey look up and smile when they see you.",
+            speaker: 'sam',
+            dialogue: "\"Want to study together? I could help you with the material... or you could help me be less anxious about Parent Night?\"",
+            effects: { academics: 5 },
+            choices: [
+                { text: "📖 \"Let's study together!\"", effects: { academics: 10, social: 5 }, next: 'week2_day3_afternoon', triggerMinigame: 'quiz', improveRelationship: 'sam' },
+                { text: "😊 \"Let's talk about Parent Night\"", effects: { stress: -5, social: 10 }, next: 'week2_day3_afternoon', romanceStart: 'sam' }
+            ]
+        },
+
+        week2_day3_practice: {
+            text: "🎯 Your skills are really developing! You're becoming one of the top members of your club.\n\nYou unlock a new skill tier!",
+            effects: { reputation: 5, happiness: 5 },
+            choices: [
+                { text: "✨ Continue to Afternoon", effects: {}, next: 'week2_day3_afternoon', addSkillPoint: 2 }
+            ]
+        },
+
+        week2_day3_afternoon: {
+            text: "🌤️ Wednesday afternoon. Lunch period.\n\nJordan approaches with a confident smile...",
+            speaker: 'jordan',
+            dialogue: "\"Hey. Everyone's been asking everyone to Homecoming. I don't do that whole awkward thing. So: Want to go with me? I promise it'll be fun.\"",
+            effects: {},
+            choices: [
+                { text: "😍 \"Yes! Absolutely!\"", effects: { happiness: 20, social: 15, reputation: 10 }, next: 'week2_day3_evening', setFlag: 'homecoming_jordan', romanceStart: 'jordan' },
+                { text: "😅 \"I'm already going with someone\"", effects: {}, next: 'week2_day3_evening' },
+                { text: "🤔 \"Let me think about it\"", effects: { social: -5 }, next: 'week2_day3_evening' },
+                { text: "😏 \"Only if you beat me at the club minigame\"", effects: { social: 5 }, next: 'week2_day3_evening', triggerMinigame: 'basketball' }
+            ]
+        },
+
+        week2_day3_evening: {
+            text: "🌆 Wednesday evening — TWO DAYS until Homecoming!\n\nYou need to make final preparations...",
+            effects: {},
+            choices: [
+                { text: "🎫 Buy Homecoming ticket ($25)", effects: { money: -25, happiness: 10 }, next: 'week2_day4_morning', requiresMoney: 25, setFlag: 'has_ticket' },
+                { text: "💰 Work your job to earn money", effects: { money: 15, energy: -15, stress: 5 }, next: 'week2_day4_morning' },
+                { text: "😴 Rest up for the big week ahead", effects: { energy: 20, stress: -10 }, next: 'week2_day4_morning' }
+            ]
+        },
+
+        week2_day4_morning: {
+            text: "☀️ Thursday Morning — Week 2, Day 4\n\nONE DAY until Homecoming!\n\nThe school is buzzing with energy. Everyone's talking about their outfits, dates, and after-party plans.",
+            effects: { stress: 5, happiness: 10 },
+            choices: [
+                { text: "💬 Join the gossip and excitement", effects: { social: 10, happiness: 10, energy: -5 }, next: 'week2_day4_social' },
+                { text: "📚 Try to focus on academics", effects: { academics: 10, social: -5, stress: 10 }, next: 'week2_day4_study' },
+                { text: "🎨 Final Homecoming preparations", effects: { happiness: 5 }, next: 'week2_day4_prep' }
+            ]
+        },
+
+        week2_day4_social: {
+            text: "🎉 The energy is contagious! You're part of the excitement.\n\nSomeone mentions an after-party at Jordan's place...",
+            effects: { social: 10, happiness: 10 },
+            choices: [
+                { text: "🔥 \"I'm definitely going!\"", effects: { social: 10, stress: 5 }, next: 'week2_day4_afternoon', setFlag: 'afterparty_plan' },
+                { text: "🤔 \"Maybe... depends how I feel\"", effects: {}, next: 'week2_day4_afternoon' },
+                { text: "😴 \"I'll probably be too tired\"", effects: { stress: -5, social: -5 }, next: 'week2_day4_afternoon' }
+            ]
+        },
+
+        week2_day4_study: {
+            text: "📚 You try to study but your mind keeps wandering to tomorrow night...\n\nThe teacher notices your distraction and calls on you!",
+            effects: { stress: 10 },
+            choices: [
+                { text: "😰 Admit you don't know the answer", effects: { reputation: -5, stress: 5 }, next: 'week2_day4_afternoon' },
+                { text: "🎲 Take a guess", effects: { academics: 5 }, next: 'week2_day4_afternoon', triggerMinigame: 'coding' },
+                { text: "😅 Make a joke to deflect", effects: { social: 5, academics: -3 }, next: 'week2_day4_afternoon' }
+            ]
+        },
+
+        week2_day4_prep: {
+            text: "✨ Final preparations! You plan your outfit, practice your moves, and get ready mentally.\n\nYou feel confident and excited!",
+            effects: { happiness: 15, stress: -10, reputation: 5 },
+            choices: [
+                { text: "😎 \"I'm ready for this!\"", effects: { confidence: 10 }, next: 'week2_day4_afternoon' }
+            ]
+        },
+
+        week2_day4_afternoon: {
+            text: "🌤️ Thursday afternoon — Last chance to prepare!\n\nWhat's your final move before the big dance?",
+            effects: {},
+            choices: [
+                { text: "💇 Get a fresh haircut/style", effects: { money: -10, reputation: 10, happiness: 10 }, next: 'week2_day4_evening', requiresMoney: 10 },
+                { text: "🎵 Practice dance moves", effects: { energy: -10, happiness: 10 }, next: 'week2_day4_evening', triggerMinigame: 'music' },
+                { text: "📱 Coordinate with your date/friends", effects: { social: 10, happiness: 5 }, next: 'week2_day4_evening' },
+                { text: "😰 Panic about everything", effects: { stress: 20, energy: -10 }, next: 'week2_day4_evening' }
+            ]
+        },
+
+        week2_day4_evening: {
+            text: "🌙 Thursday night — Tomorrow is HOMECOMING!\n\nYou can barely sleep from excitement and nerves...",
+            effects: { energy: -5, stress: 10 },
+            choices: [
+                { text: "😴 Force yourself to sleep early", effects: { energy: 20, stress: -5 }, next: 'week2_day5_homecoming' },
+                { text: "📱 Chat with friends until late", effects: { energy: -10, social: 10, happiness: 10 }, next: 'week2_day5_homecoming' },
+                { text: "🎮 Relax with games", effects: { energy: -5, stress: -10, happiness: 10 }, next: 'week2_day5_homecoming' }
+            ]
+        },
+
+        week2_day5_homecoming: {
+            text: "✨💃 FRIDAY — HOMECOMING DANCE! 💃✨\n\nThe day has arrived! School flies by as everyone counts down to tonight.\n\nAfter school, you get ready. Your outfit looks amazing. You feel amazing.\n\nAs you arrive at the decorated gym, the music is already pumping, lights are flashing, and your friends are waiting...",
+            effects: { happiness: 20, stress: 10 },
+            choices: [
+                { text: "🎉 Dance the night away!", effects: { happiness: 25, social: 20, energy: -20, stress: -15 }, next: 'week2_homecoming_result' },
+                { text: "😰 Stay on the sidelines", effects: { stress: 5, social: -10, happiness: -10 }, next: 'week2_homecoming_result' },
+                { text: "💑 Focus on your date", effects: { happiness: 20, social: 10 }, next: 'week2_homecoming_romance' }
+            ]
+        },
+
+        week2_homecoming_romance: {
+            text: "💕 The night is magical. You and your date dance, laugh, and share meaningful moments.\n\nUnder the disco ball, they take your hand...",
+            effects: { happiness: 30, social: 15 },
+            choices: [
+                { text: "💋 Share a kiss", effects: { happiness: 20, stress: -10 }, next: 'week2_homecoming_result', setFlag: 'first_kiss', romanceLevel: 'dating' },
+                { text: "🤗 Share a hug", effects: { happiness: 10, social: 10 }, next: 'week2_homecoming_result', romanceLevel: 'close' },
+                { text: "😊 Just enjoy the moment", effects: { happiness: 10 }, next: 'week2_homecoming_result' }
+            ]
+        },
+
+        week2_homecoming_result: {
+            text: "🌟 Homecoming was AMAZING! One of the best nights of your life!\n\nWeek 2 is complete, but the year is far from over...\n\nWeek 3 brings Parent-Teacher Night and new challenges!",
+            effects: { happiness: 20, reputation: 10, stress: -20 },
+            choices: [
+                { text: "🔄 Continue to Week 3", effects: {}, next: 'week3_day1_morning' }
+            ],
+            onEnter: () => {
+                if (Game) {
+                    Game.week = 3;
+                    Game.day = 11;
+                    if (Game.player) {
+                        Game.player.eventsAttended = Game.player.eventsAttended || [];
+                        Game.player.eventsAttended.push('homecoming');
+                    }
+                }
+            }
+        },
+
+        /* ==================== WEEK 3 - DAYS 11-15 ==================== */
+        week3_day1_morning: {
+            text: "☀️ Monday Morning — Week 3, Day 1\n\nPost-Homecoming glow! Everyone's still talking about the dance.\n\nBut reality hits: Parent-Teacher Night is THIS WEDNESDAY!",
+            effects: { stress: 10 },
+            choices: [
+                { text: "😰 Panic mode activated", effects: { stress: 15, academics: -5 }, next: 'week3_day1_panic' },
+                { text: "💪 Time to get serious about grades", effects: { academics: 10, stress: 5 }, next: 'week3_day1_study', triggerMinigame: 'quiz' },
+                { text: "🤷 My grades are probably fine", effects: { stress: -5 }, next: 'week3_day1_casual' }
+            ]
+        },
+
+        week3_day1_panic: {
+            text: "😰 You realize you've been having so much fun that grades slipped!\n\nYou have TWO DAYS to improve before parents see everything!",
+            effects: { stress: 20 },
+            choices: [
+                { text: "📚 Study marathon starts NOW", effects: { academics: 15, energy: -20, stress: 10 }, next: 'week3_day1_afternoon', triggerMinigame: 'coding' },
+                { text: "🆘 Ask teachers for extra credit", effects: { academics: 10, reputation: 5 }, next: 'week3_day1_afternoon' },
+                { text: "😭 Accept my fate", effects: { stress: 10, happiness: -10 }, next: 'week3_day1_afternoon' }
+            ]
+        },
+
+        week3_day1_study: {
+            text: "📚 Focused study session! You review everything, take good notes, and ask questions.\n\nSam offers to form a study group for Parent Night prep!",
+            effects: { academics: 15, stress: 5 },
+            choices: [
+                { text: "🤝 Join the study group", effects: { academics: 10, social: 10, stress: -5 }, next: 'week3_day1_afternoon', improveRelationship: 'sam' },
+                { text: "📖 Study alone (more focused)", effects: { academics: 15, social: -5, stress: 5 }, next: 'week3_day1_afternoon' }
+            ]
+        },
+
+        week3_day1_casual: {
+            text: "🤷 You check your grades... they're actually not bad! Some As, some Bs.\n\nYou're in decent shape for Parent Night!",
+            effects: { stress: -10, happiness: 10 },
+            choices: [
+                { text: "😊 Feel relieved and proud", effects: { happiness: 10 }, next: 'week3_day1_afternoon' }
+            ]
+        },
+
+        week3_day1_afternoon: {
+            text: "🌤️ Monday afternoon. Your club is planning a special project!\n\nA skills showcase where members demonstrate advanced techniques. It's perfect resume material!",
+            effects: {},
+            choices: [
+                { text: "🌟 Volunteer to showcase skills", effects: { stress: 10, reputation: 10 }, next: 'week3_skill_showcase', setFlag: 'showcase_volunteer' },
+                { text: "👥 Help organize instead", effects: { social: 10, reputation: 5 }, next: 'week3_day1_evening' },
+                { text: "😰 Too stressed about Parent Night", effects: { stress: 5 }, next: 'week3_day1_evening' }
+            ]
+        },
+
+        week3_skill_showcase: {
+            text: "🎯 You demonstrate your skills to the club! Your practice pays off!\n\nYou unlock an advanced skill!",
+            effects: { reputation: 15, happiness: 15, confidence: 10 },
+            choices: [
+                { text: "💪 \"I've worked hard for this!\"", effects: { happiness: 10 }, next: 'week3_day1_evening', addSkillPoint: 3 }
+            ]
+        },
+
+        week3_day1_evening: {
+            text: "🌙 Monday evening. Two days until Parent Night!\n\nYou need to prepare...",
+            effects: {},
+            choices: [
+                { text: "📚 Study intensely", effects: { academics: 15, energy: -20, stress: 10 }, next: 'week3_day2_morning', triggerMinigame: 'quiz' },
+                { text: "🧹 Clean room (parents are coming!)", effects: { stress: -5, happiness: 5 }, next: 'week3_day2_morning' },
+                { text: "😴 Rest and de-stress", effects: { energy: 20, stress: -15 }, next: 'week3_day2_morning' }
+            ]
+        },
+
+        week3_day2_morning: {
+            text: "☀️ Tuesday — Week 3, Day 2\n\nONE DAY until Parent-Teacher Night!\n\nTeachers are dropping hints about what they'll tell parents...",
+            effects: { stress: 15 },
+            choices: [
+                { text: "😰 Try to guess what teachers will say", effects: { stress: 10 }, next: 'week3_day2_class' },
+                { text: "💪 Make a great impression today", effects: { academics: 10, reputation: 10, energy: -10 }, next: 'week3_day2_class' },
+                { text: "🤐 Stay quiet and hope for the best", effects: { stress: 5 }, next: 'week3_day2_class' }
+            ]
+        },
+
+        week3_day2_class: {
+            text: "📝 Teachers are being extra observant today, clearly forming their Parent Night opinions...\n\nYou have one chance to make a final impression!",
+            effects: {},
+            choices: [
+                { text: "✋ Participate actively in class", effects: { academics: 10, reputation: 10, energy: -5 }, next: 'week3_day2_afternoon', triggerMinigame: 'coding' },
+                { text: "📖 Turn in perfect homework", effects: { academics: 15, stress: 5 }, next: 'week3_day2_afternoon' },
+                { text: "🎭 Charm teachers with personality", effects: { social: 10, reputation: 5 }, next: 'week3_day2_afternoon' }
+            ]
+        },
+
+        week3_day2_afternoon: {
+            text: "🌤️ Tuesday afternoon — Last day before Parent Night!\n\nYour friends are all stressing about it too. Someone suggests a group study session!",
+            effects: {},
+            choices: [
+                { text: "📚 Join the study group", effects: { academics: 15, social: 15, stress: -10 }, next: 'week3_day2_evening', triggerMinigame: 'quiz' },
+                { text: "💪 Practice club skills", effects: { energy: -10, stress: -10 }, next: 'week3_day2_evening', triggerMinigame: 'basketball' },
+                { text: "💰 Work to earn money", effects: { money: 15, energy: -15, stress: 5 }, next: 'week3_day2_evening' }
+            ]
+        },
+
+        week3_day2_evening: {
+            text: "🌙 Tuesday evening — TOMORROW is Parent-Teacher Night!\n\nYou can't sleep. Your mind races with possibilities...",
+            effects: { stress: 20, energy: -10 },
+            choices: [
+                { text: "😰 Last-minute cramming", effects: { academics: 10, energy: -15, stress: 15 }, next: 'week3_day3_morning', triggerMinigame: 'quiz' },
+                { text: "🧘 Meditate and stay calm", effects: { stress: -15, energy: 10 }, next: 'week3_day3_morning' },
+                { text: "📱 Vent to friends", effects: { social: 10, stress: -10 }, next: 'week3_day3_morning' }
+            ]
+        },
+
+        week3_day3_morning: {
+            text: "☀️ Wednesday — PARENT-TEACHER NIGHT! 🏫👪\n\nThe day is here. School feels different knowing your parents will walk these same halls tonight...",
+            effects: { stress: 25 },
+            choices: [
+                { text: "😰 Be extra anxious all day", effects: { stress: 20, academics: -10, social: -10 }, next: 'week3_day3_afternoon' },
+                { text: "💪 Show your best self", effects: { academics: 10, reputation: 10, energy: -10 }, next: 'week3_day3_afternoon' },
+                { text: "🤷 Accept whatever happens", effects: { stress: -10, happiness: 5 }, next: 'week3_day3_afternoon' }
+            ]
+        },
+
+        week3_day3_afternoon: {
+            text: "🌆 Wednesday evening — Parent-Teacher Night begins!\n\nYour parents arrive. You lead them through the halls, introducing them to your teachers...\n\nEach teacher shares their thoughts on your performance...",
+            effects: {},
+            choices: [
+                { text: "😰 Nervously await the verdict", effects: { stress: 10 }, next: 'week3_parent_night_results' }
+            ]
+        },
+
+        week3_parent_night_results: {
+            text: "📊 The night ends. Your parents' reaction depends on how you've been doing...\n\n" + 
+                  (Game && Game.player && Game.player.stats.academics >= 70 
+                    ? "👏 Your parents are PROUD! Teachers had great things to say! Your hard work paid off!"
+                    : Game && Game.player && Game.player.stats.academics >= 50
+                    ? "😊 Your parents are satisfied. Teachers said you're doing okay with room to improve."
+                    : "😬 Your parents are concerned. Teachers mentioned you need to focus more...") +
+                  "\n\nWeek 3 continues with new perspective!",
+            effects: { stress: -20 },
+            choices: [
+                { text: "Continue Week 3", effects: {}, next: 'week3_day4_morning' }
+            ]
+        },
+
+        week3_day4_morning: {
+            text: "☀️ Thursday — Week 3, Day 4\n\nPost-Parent Night recovery! The pressure is off... for now.\n\nTime to focus on other things!",
+            effects: { stress: -10, happiness: 10 },
+            choices: [
+                { text: "🎨 Spend quality time with friends", effects: { social: 15, happiness: 15 }, next: 'week3_day4_hangout' },
+                { text: "💪 Push your skills even further", effects: { energy: -10 }, next: 'week3_day4_skills', triggerMinigame: 'music' },
+                { text: "💰 Focus on making money", effects: { money: 20, energy: -15 }, next: 'week3_day4_afternoon' }
+            ]
+        },
+
+        week3_day4_hangout: {
+            text: "🎉 Quality time with your close friends! You laugh, share stories, and deepen your bonds.\n\nSomeone asks about your romantic life...",
+            effects: { social: 15, happiness: 15 },
+            choices: [
+                { text: "💕 Share about your crush/relationship", effects: { social: 10, happiness: 10 }, next: 'week3_day4_afternoon', improveRelationship: 'alex' },
+                { text: "🤐 Keep it private", effects: {}, next: 'week3_day4_afternoon' },
+                { text: "😅 Make a joke", effects: { social: 5, happiness: 5 }, next: 'week3_day4_afternoon' }
+            ]
+        },
+
+        week3_day4_skills: {
+            text: "⭐ Advanced skills training! You're becoming truly exceptional at your club activity!\n\nYou unlock MASTER level skills!",
+            effects: { reputation: 20, happiness: 15 },
+            choices: [
+                { text: "🏆 \"I'm becoming the best!\"", effects: { confidence: 15 }, next: 'week3_day4_afternoon', addSkillPoint: 4 }
+            ]
+        },
+
+        week3_day4_afternoon: {
+            text: "🌤️ Thursday afternoon. Life feels good!\n\nWeekend plans are forming...",
+            effects: {},
+            choices: [
+                { text: "🎉 Plan a fun weekend", effects: { happiness: 10, social: 10 }, next: 'week3_day4_evening' },
+                { text: "📚 Plan a study weekend", effects: { academics: 5, stress: 5 }, next: 'week3_day4_evening' },
+                { text: "😴 Plan a rest weekend", effects: { energy: 10, stress: -5 }, next: 'week3_day4_evening' }
+            ]
+        },
+
+        week3_day4_evening: {
+            text: "🌙 Thursday evening — One more day until the weekend!\n\nWhat's your priority?",
+            effects: {},
+            choices: [
+                { text: "💑 Spend time with romantic interest", effects: { happiness: 15, social: 10 }, next: 'week3_day5_morning', romanceProgress: true },
+                { text: "🎮 Relax and game", effects: { happiness: 10, stress: -10 }, next: 'week3_day5_morning' },
+                { text: "💪 Train intensely", effects: { energy: -15, reputation: 5 }, next: 'week3_day5_morning', addSkillPoint: 2 }
+            ]
+        },
+
+        week3_day5_morning: {
+            text: "☀️ Friday — Week 3, Day 5! \n\nEnd of Week 3! Teachers announce that MIDTERM EXAMS start Week 4!\n\n😰 The biggest tests of the year are coming...",
+            effects: { stress: 20 },
+            choices: [
+                { text: "😰 Panic about midterms", effects: { stress: 20, happiness: -10 }, next: 'week3_day5_afternoon' },
+                { text: "💪 Start preparing NOW", effects: { academics: 15, stress: 10 }, next: 'week3_day5_afternoon', triggerMinigame: 'coding' },
+                { text: "🤷 Deal with it next week", effects: { stress: -5, happiness: 5 }, next: 'week3_day5_afternoon' }
+            ]
+        },
+
+        week3_day5_afternoon: {
+            text: "🌆 Friday afternoon. Week 3 is almost done!\n\nOne last choice before the weekend...",
+            effects: {},
+            choices: [
+                { text: "🎉 Party to de-stress", effects: { happiness: 20, social: 15, energy: -20, stress: -15 }, next: 'week3_ending' },
+                { text: "📚 Start studying for midterms", effects: { academics: 20, stress: 10 }, next: 'week3_ending', triggerMinigame: 'quiz' },
+                { text: "😴 Rest and recharge", effects: { energy: 25, stress: -20 }, next: 'week3_ending' }
+            ]
+        },
+
+        week3_ending: {
+            text: "🌟 Week 3 Complete!\n\nYou survived Homecoming, Parent-Teacher Night, and learned so much!\n\nBut Week 4 brings MIDTERM EXAMS — your biggest academic challenge yet!\n\nAre you ready?",
+            effects: { happiness: 15, confidence: 10 },
+            choices: [
+                { text: "🔄 Continue to Week 4 (Midterms!)", effects: {}, next: 'week4_day1_morning' }
+            ],
+            onEnter: () => {
+                if (Game) {
+                    Game.week = 4;
+                    Game.day = 16;
+                }
+            }
+        },
+
+        /* ==================== WEEK 4 - DAYS 16-20 (MIDTERM WEEK) ==================== */
+        week4_day1_morning: {
+            text: "☀️ Monday — Week 4, Day 1 — MIDTERM WEEK BEGINS! 📝\n\nThe atmosphere is tense. Everyone is studying. The teachers are serious.\n\nThis week determines a huge part of your grade!",
+            effects: { stress: 30 },
+            choices: [
+                { text: "📚 All-out study mode", effects: { academics: 20, energy: -20, stress: 15 }, next: 'week4_day1_study', triggerMinigame: 'quiz' },
+                { text: "🤝 Form study groups", effects: { academics: 15, social: 10, stress: 5 }, next: 'week4_day1_group' },
+                { text: "😰 Procrastinate in fear", effects: { stress: 25, academics: -10 }, next: 'week4_day1_procrastinate' }
+            ]
+        },
+
+        week4_day1_study: {
+            text: "📚 INTENSE study session! You review everything from the past three weeks.\n\nYour brain feels like it's going to explode, but you're learning!",
+            effects: { academics: 20, energy: -20, stress: 15 },
+            choices: [
+                { text: "💪 Keep pushing", effects: { academics: 10, energy: -15, stress: 10 }, next: 'week4_day1_afternoon', triggerMinigame: 'coding' },
+                { text: "😴 Take a break", effects: { energy: 10, stress: -10 }, next: 'week4_day1_afternoon' }
+            ]
+        },
+
+        week4_day1_group: {
+            text: "🤝 Study group with Sam, Riley, and others! You quiz each other and share notes.\n\nTeamwork makes the dream work!",
+            effects: { academics: 15, social: 10, stress: 5 },
+            choices: [
+                { text: "📖 Continue studying together", effects: { academics: 10, social: 5 }, next: 'week4_day1_afternoon' },
+                { text: "😊 Bond over shared stress", effects: { social: 15, happiness: 10, stress: -5 }, next: 'week4_day1_afternoon' }
+            ]
+        },
+
+        week4_day1_procrastinate: {
+            text: "😰 You spend more time worrying than studying!\n\nThis isn't helping...",
+            effects: { stress: 25, happiness: -15 },
+            choices: [
+                { text: "💪 Snap out of it and study!", effects: { academics: 15, stress: 5 }, next: 'week4_day1_afternoon', triggerMinigame: 'quiz' },
+                { text: "🆘 Ask for help", effects: { social: 10, academics: 10 }, next: 'week4_day1_afternoon' }
+            ]
+        },
+
+        week4_day1_afternoon: {
+            text: "🌤️ Monday afternoon. Midterms start TOMORROW!\n\nLast chance to prepare...",
+            effects: {},
+            choices: [
+                { text: "📚 Final review session", effects: { academics: 15, energy: -20, stress: 10 }, next: 'week4_day1_evening', triggerMinigame: 'coding' },
+                { text: "😴 Rest before big day", effects: { energy: 20, stress: -15 }, next: 'week4_day1_evening' },
+                { text: "🎮 De-stress with games", effects: { happiness: 10, stress: -10, academics: -5 }, next: 'week4_day1_evening' }
+            ]
+        },
+
+        week4_day1_evening: {
+            text: "🌙 Monday evening — Tomorrow: FIRST MIDTERM!\n\nYou need to sleep but your mind won't stop racing...",
+            effects: { stress: 20, energy: -10 },
+            choices: [
+                { text: "😴 Force yourself to sleep", effects: { energy: 25, stress: -10 }, next: 'week4_day2_exam1' },
+                { text: "📚 Study until exhausted", effects: { academics: 10, energy: -25, stress: 15 }, next: 'week4_day2_exam1' },
+                { text: "📱 Chat with friends for support", effects: { social: 10, stress: -10 }, next: 'week4_day2_exam1' }
+            ]
+        },
+
+        week4_day2_exam1: {
+            text: "📝 MIDTERM EXAM #1 — English & Literature!\n\nYou sit down. The test is placed in front of you. Deep breath...\n\nTime to show what you know!",
+            effects: { stress: 30 },
+            choices: [
+                { text: "💪 Give it your all!", effects: {}, next: 'week4_exam1_result', triggerMinigame: 'quiz' }
+            ]
+        },
+
+        week4_exam1_result: {
+            text: "📊 Exam 1 complete! You walk out feeling " + 
+                  (Game && Game.player && Game.player.stats.academics >= 70 
+                    ? "confident! You think you aced it! 🌟"
+                    : Game && Game.player && Game.player.stats.academics >= 50
+                    ? "okay. Could've been better, but not terrible. 😊"
+                    : "worried. That was rough... 😰") +
+                  "\n\nTwo more exams this week!",
+            effects: { stress: -10, energy: -15 },
+            choices: [
+                { text: "Continue to Day 3", effects: {}, next: 'week4_day3_exam2' }
+            ]
+        },
+
+        week4_day3_exam2: {
+            text: "📝 MIDTERM EXAM #2 — Math & Science!\n\nThe hardest subjects! You're already exhausted from yesterday...\n\nBut you have to push through!",
+            effects: { stress: 35, energy: -10 },
+            choices: [
+                { text: "💪 Do your best!", effects: {}, next: 'week4_exam2_result', triggerMinigame: 'coding' }
+            ]
+        },
+
+        week4_exam2_result: {
+            text: "📊 Exam 2 done! That was INTENSE!\n\nOne more exam tomorrow, then it's over!",
+            effects: { stress: -15, energy: -20, happiness: 5 },
+            choices: [
+                { text: "😴 Rest before final exam", effects: { energy: 20, stress: -15 }, next: 'week4_day4_exam3' },
+                { text: "📚 Quick review session", effects: { academics: 10, energy: -10, stress: 5 }, next: 'week4_day4_exam3' }
+            ]
+        },
+
+        week4_day4_exam3: {
+            text: "📝 FINAL MIDTERM EXAM — History & Social Studies!\n\nThe last one! After this, you're FREE!\n\nOne final push!",
+            effects: { stress: 30, energy: -10 },
+            choices: [
+                { text: "🏆 Finish strong!", effects: {}, next: 'week4_exam3_result', triggerMinigame: 'quiz' }
+            ]
+        },
+
+        week4_exam3_result: {
+            text: "🎉 ALL MIDTERMS COMPLETE!!!\n\nYOU DID IT! The weight lifts off your shoulders!\n\nEveryone floods out of the exam room celebrating!",
+            effects: { stress: -40, happiness: 30, energy: -25 },
+            choices: [
+                { text: "🎉 CELEBRATE!", effects: { happiness: 20, social: 20 }, next: 'week4_celebration' }
+            ]
+        },
+
+        week4_celebration: {
+            text: "🎊 Post-Midterm PARTY!\n\nEveryone is celebrating! Dancing, laughing, pure relief!\n\nYour friends are there, your crush/partner is there, everyone is just... happy!",
+            effects: { happiness: 25, social: 25, stress: -20 },
+            choices: [
+                { text: "💃 Dance the night away!", effects: { happiness: 15, energy: -20 }, next: 'week4_day5_morning' },
+                { text: "💑 Spend time with your romantic interest", effects: { happiness: 20, social: 15 }, next: 'week4_romance_moment', romanceProgress: true },
+                { text: "😴 I'm too exhausted to party", effects: { energy: 20, social: -10 }, next: 'week4_day5_morning' }
+            ]
+        },
+
+        week4_romance_moment: {
+            text: "💕 A quiet moment with someone special. Away from the noise, you talk about everything you've been through together.\n\nThe connection is undeniable...",
+            effects: { happiness: 25, social: 15 },
+            choices: [
+                { text: "💋 Kiss them", effects: { happiness: 30, stress: -15 }, next: 'week4_day5_morning', romanceLevel: 'committed' },
+                { text: "🤗 Hold them close", effects: { happiness: 20, social: 10 }, next: 'week4_day5_morning', romanceLevel: 'serious' },
+                { text: "💬 Confess your feelings", effects: { happiness: 25, social: 15, confidence: 10 }, next: 'week4_day5_morning', romanceLevel: 'dating' }
+            ]
+        },
+
+        week4_day5_morning: {
+            text: "☀️ Friday — Week 4, Day 5! Post-Midterm Recovery!\n\nThe week after exams is always chill. Teachers go easy. Everyone's still recovering.\n\nYou've made it through 4 weeks of high school!\n\nYour character stats, relationships, and choices have shaped your journey...",
+            effects: { happiness: 15, energy: 20, stress: -20 },
+            choices: [
+                { text: "🎓 Reflect on your journey", effects: {}, next: 'week4_reflection' }
+            ]
+        },
+
+        week4_reflection: {
+            text: "🌟 FOUR WEEKS COMPLETE!\n\nYou've:\n• Survived your first month of high school\n• Made lasting friendships\n• Possibly found romance\n• Joined clubs and developed skills\n• Attended Homecoming Dance\n• Survived Parent-Teacher Night\n• Conquered Midterm Exams\n\n" +
+                  (Game && Game.player ? 
+                    `💰 Money: $${Game.player.money}\n` +
+                    `📚 Academics: ${Game.player.stats.academics}\n` +
+                    `👥 Social: ${Game.player.stats.social}\n` +
+                    `😊 Happiness: ${Game.player.stats.happiness}\n` +
+                    `⭐ Reputation: ${Game.player.stats.reputation}`
+                    : "") +
+                  "\n\nThe school year continues, but this marks a major milestone!\n\nWinter break approaches, Year 2 awaits, and your legend is just beginning...",
+            effects: { happiness: 30, confidence: 20 },
+            choices: [
+                { text: "📊 View my final stats and ending", effects: {}, next: '_ENDING' }
+            ],
+            onEnter: () => {
+                if (Game) {
+                    Game.week = 5;
+                    Game.day = 21;
+                }
+            }
         },
 
         /* ==================== SANDBOX NODES ==================== */
@@ -631,6 +1336,9 @@ const Story = {
                 { text: "🧠 Memory Match", effects: {}, next: 'sandbox_start', triggerMinigame: 'memory' },
                 { text: "⚡ Reaction Test", effects: {}, next: 'sandbox_start', triggerMinigame: 'reaction' },
                 { text: "🧺 Catch Game", effects: {}, next: 'sandbox_start', triggerMinigame: 'catch' },
+                { text: "🏀 Basketball", effects: {}, next: 'sandbox_start', triggerMinigame: 'basketball' },
+                { text: "🎵 Music Rhythm", effects: {}, next: 'sandbox_start', triggerMinigame: 'music' },
+                { text: "💻 Coding Challenge", effects: {}, next: 'sandbox_start', triggerMinigame: 'coding' },
                 { text: "🔙 Back", effects: {}, next: 'sandbox_start' }
             ]
         },

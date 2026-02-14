@@ -258,7 +258,15 @@ const GameData = {
         { id: 'gift', name: '🎁 Gift', cost: 10, effect: { social: 10 }, desc: 'A small gift for a friend.' },
         { id: 'energy_drink', name: '⚡ Energy Drink', cost: 4, effect: { energy: 25, stress: 5 }, desc: 'Maximum energy! Slight stress.' },
         { id: 'book', name: '📖 Novel', cost: 12, effect: { academics: 8, stress: -8 }, desc: 'Reading for fun and learning.' },
-        { id: 'game', name: '🎮 Video Game', cost: 20, effect: { happiness: 20, stress: -10, academics: -5 }, desc: 'So fun! Might distract from studies.' }
+        { id: 'game', name: '🎮 Video Game', cost: 20, effect: { happiness: 20, stress: -10, academics: -5 }, desc: 'So fun! Might distract from studies.' },
+        { id: 'study_guide', name: '📚 Study Guide', cost: 15, effect: { academics: 10 }, desc: 'Ace those tests!' },
+        { id: 'cologne', name: '💐 Cologne/Perfume', cost: 18, effect: { social: 8, reputation: 5 }, desc: 'Smell amazing!' },
+        { id: 'lucky_charm', name: '🍀 Lucky Charm', cost: 25, effect: { happiness: 15, stress: -10 }, desc: 'Good luck vibes!' },
+        { id: 'art_supplies', name: '🎨 Art Supplies', cost: 20, effect: { happiness: 12, stress: -5 }, desc: 'Express your creativity.' },
+        { id: 'phone_upgrade', name: '📱 Phone Upgrade', cost: 100, effect: { social: 15, happiness: 20, reputation: 10 }, desc: 'The latest model!' },
+        { id: 'concert_ticket', name: '🎫 Concert Ticket', cost: 35, effect: { happiness: 25, social: 10 }, desc: 'See your favorite band!' },
+        { id: 'protein_shake', name: '🥤 Protein Shake', cost: 6, effect: { energy: 20, reputation: 3 }, desc: 'Get fit!' },
+        { id: 'meditation_app', name: '🧘 Meditation App', cost: 10, effect: { stress: -20, happiness: 10 }, desc: 'Find your zen.' }
     ],
 
     /* ---- Club Data ---- */
@@ -269,6 +277,109 @@ const GameData = {
         music: { name: '🎵 Music Club', statBonus: 'happiness', socialBonus: 10, desc: 'Make beautiful music together.' },
         art: { name: '🎨 Art Club', statBonus: 'happiness', socialBonus: 8, desc: 'Create and be inspired.' },
         gaming: { name: '🎮 Gaming Club', statBonus: 'stress', socialBonus: 12, desc: 'Compete and have fun. Reduces stress.' }
+    },
+
+    /* ---- Skill Trees ---- */
+    skillTrees: {
+        sports: [
+            { id: 'athlete1', name: 'Athletic Basics', desc: 'Learn the fundamentals', cost: 1, bonus: { energy: 5 }, prereq: null },
+            { id: 'athlete2', name: 'Team Player', desc: 'Work well with others', cost: 2, bonus: { social: 5, energy: 5 }, prereq: 'athlete1' },
+            { id: 'athlete3', name: 'MVP Training', desc: 'Elite performance', cost: 3, bonus: { energy: 10, reputation: 10 }, prereq: 'athlete2' },
+            { id: 'athlete4', name: 'Captain Material', desc: 'Leadership skills', cost: 4, bonus: { reputation: 15, social: 10 }, prereq: 'athlete3' }
+        ],
+        drama: [
+            { id: 'drama1', name: 'Stage Presence', desc: 'Overcome stage fright', cost: 1, bonus: { social: 5 }, prereq: null },
+            { id: 'drama2', name: 'Method Acting', desc: 'Deep character work', cost: 2, bonus: { social: 5, happiness: 5 }, prereq: 'drama1' },
+            { id: 'drama3', name: 'Lead Role', desc: 'Main character energy', cost: 3, bonus: { social: 10, reputation: 10 }, prereq: 'drama2' },
+            { id: 'drama4', name: 'Theatre Legend', desc: 'School theatre star', cost: 4, bonus: { reputation: 15, happiness: 10 }, prereq: 'drama3' }
+        ],
+        science: [
+            { id: 'science1', name: 'Lab Safety', desc: 'Don\'t blow anything up', cost: 1, bonus: { academics: 5 }, prereq: null },
+            { id: 'science2', name: 'Hypothesis Master', desc: 'Scientific method', cost: 2, bonus: { academics: 5 }, prereq: 'science1' },
+            { id: 'science3', name: 'Research Pro', desc: 'Advanced experiments', cost: 3, bonus: { academics: 10, reputation: 5 }, prereq: 'science2' },
+            { id: 'science4', name: 'Future Nobel', desc: 'Genius-level work', cost: 4, bonus: { academics: 15, reputation: 10 }, prereq: 'science3' }
+        ],
+        music: [
+            { id: 'music1', name: 'Basic Notes', desc: 'Learn to read music', cost: 1, bonus: { happiness: 5 }, prereq: null },
+            { id: 'music2', name: 'Harmonies', desc: 'Play with feeling', cost: 2, bonus: { happiness: 5, social: 5 }, prereq: 'music1' },
+            { id: 'music3', name: 'Solo Performance', desc: 'Take center stage', cost: 3, bonus: { happiness: 10, reputation: 10 }, prereq: 'music2' },
+            { id: 'music4', name: 'Musical Prodigy', desc: 'Concert-level skill', cost: 4, bonus: { happiness: 15, reputation: 10 }, prereq: 'music3' }
+        ],
+        art: [
+            { id: 'art1', name: 'Basic Techniques', desc: 'Brush and canvas', cost: 1, bonus: { happiness: 5 }, prereq: null },
+            { id: 'art2', name: 'Style Development', desc: 'Find your voice', cost: 2, bonus: { happiness: 5, social: 5 }, prereq: 'art1' },
+            { id: 'art3', name: 'Gallery Show', desc: 'Public exhibition', cost: 3, bonus: { happiness: 10, reputation: 10 }, prereq: 'art2' },
+            { id: 'art4', name: 'Art Visionary', desc: 'Revolutionary artist', cost: 4, bonus: { happiness: 15, reputation: 10 }, prereq: 'art3' }
+        ],
+        gaming: [
+            { id: 'gaming1', name: 'Button Masher', desc: 'Learn the controls', cost: 1, bonus: { stress: -5 }, prereq: null },
+            { id: 'gaming2', name: 'Strategy Mind', desc: 'Think ahead', cost: 2, bonus: { stress: -5, academics: 5 }, prereq: 'gaming1' },
+            { id: 'gaming3', name: 'Tournament Ready', desc: 'Competitive level', cost: 3, bonus: { stress: -10, reputation: 10 }, prereq: 'gaming2' },
+            { id: 'gaming4', name: 'Esports Pro', desc: 'School champion', cost: 4, bonus: { reputation: 15, social: 10 }, prereq: 'gaming3' }
+        ]
+    },
+
+    /* ---- Relationship Tiers (Enhanced) ---- */
+    relationshipTiers: [
+        { min: 0, max: 19, label: 'Stranger', emoji: '😐', canRomance: false, canHangout: false },
+        { min: 20, max: 39, label: 'Acquaintance', emoji: '🙂', canRomance: false, canHangout: true },
+        { min: 40, max: 59, label: 'Friend', emoji: '😊', canRomance: true, canHangout: true },
+        { min: 60, max: 79, label: 'Close Friend', emoji: '😄', canRomance: true, canHangout: true },
+        { min: 80, max: 94, label: 'Best Friend', emoji: '🤝', canRomance: true, canHangout: true },
+        { min: 95, max: 100, label: 'Soulmate', emoji: '💕', canRomance: true, canHangout: true }
+    ],
+
+    /* ---- Romance-able NPCs ---- */
+    romanceableNPCs: ['alex', 'jordan', 'sam', 'riley', 'morgan', 'casey'],
+
+    /* ---- Part-time Jobs ---- */
+    partTimeJobs: [
+        { id: 'cafe', name: '☕ Coffee Shop', pay: 15, energyCost: 15, timeCost: 2, desc: 'Serve coffee and snacks' },
+        { id: 'tutor', name: '📚 Tutoring', pay: 20, energyCost: 10, timeCost: 2, desc: 'Help students study', requires: { academics: 60 } },
+        { id: 'retail', name: '🛍️ Retail Store', pay: 12, energyCost: 20, timeCost: 2, desc: 'Stock shelves, help customers' },
+        { id: 'babysit', name: '👶 Babysitting', pay: 18, energyCost: 25, timeCost: 3, desc: 'Watch neighbor\'s kids' },
+        { id: 'lawn', name: '🏡 Lawn Care', pay: 25, energyCost: 30, timeCost: 2, desc: 'Mow lawns, yard work' }
+    ],
+
+    /* ---- School Events ---- */
+    schoolEvents: {
+        homecoming: { 
+            id: 'homecoming', 
+            week: 2, 
+            day: 5, 
+            name: '💃 Homecoming Dance', 
+            ticketCost: 25,
+            desc: 'The first major dance of the year!'
+        },
+        parentNight: { 
+            id: 'parentNight', 
+            week: 3, 
+            day: 3, 
+            name: '👪 Parent-Teacher Night', 
+            desc: 'Your parents meet your teachers'
+        },
+        midterm: { 
+            id: 'midterm', 
+            week: 4, 
+            day: 1, 
+            name: '📝 Midterm Exams', 
+            desc: 'Time to prove what you\'ve learned'
+        },
+        winterFormal: { 
+            id: 'winterFormal', 
+            week: 6, 
+            day: 5, 
+            name: '❄️ Winter Formal', 
+            ticketCost: 30,
+            desc: 'Dress up for this elegant evening'
+        },
+        graduation: { 
+            id: 'graduation', 
+            week: 8, 
+            day: 5, 
+            name: '🎓 Graduation Ceremony', 
+            desc: 'The end of freshman year'
+        }
     },
 
     /* ---- Period Names ---- */

@@ -15,6 +15,9 @@ const Minigames = {
             case 'memory': this.startMemory(); break;
             case 'reaction': this.startReaction(); break;
             case 'catch': this.startCatch(); break;
+            case 'basketball': this.startBasketball(); break;
+            case 'music': this.startMusic(); break;
+            case 'coding': this.startCoding(); break;
             default: this.startQuiz();
         }
     },
@@ -405,5 +408,288 @@ const Minigames = {
             clearInterval(spawnInterval);
             this.finish(Math.min(score, 20), 20);
         }, duration);
+    },
+
+    /* ==================== BASKETBALL MINIGAME ==================== */
+    startBasketball() {
+        const title = document.getElementById('minigame-title');
+        title.textContent = '🏀 Basketball Shooting';
+
+        const area = document.getElementById('minigame-area');
+        const status = document.getElementById('minigame-status');
+
+        let score = 0;
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        area.innerHTML = `
+            <div class="basketball-game">
+                <div class="basketball-hoop">🏀🥅</div>
+                <div class="basketball-power-meter">
+                    <div class="power-bar" id="power-bar"></div>
+                </div>
+                <div class="basketball-controls">
+                    <p>Click to stop the power meter at the right time!</p>
+                    <button class="btn btn-primary btn-large" id="shoot-btn">Shoot!</button>
+                </div>
+                <div class="basketball-score">Score: <span id="basket-score">0</span>/${maxAttempts}</div>
+            </div>
+        `;
+
+        let powerLevel = 0;
+        let powerDirection = 1;
+        let powerInterval = null;
+
+        const shootBtn = document.getElementById('shoot-btn');
+        const powerBar = document.getElementById('power-bar');
+        const scoreEl = document.getElementById('basket-score');
+
+        const startPowerMeter = () => {
+            powerInterval = setInterval(() => {
+                powerLevel += powerDirection * 2;
+                if (powerLevel >= 100) powerDirection = -1;
+                if (powerLevel <= 0) powerDirection = 1;
+                powerBar.style.width = powerLevel + '%';
+            }, 20);
+        };
+
+        shootBtn.addEventListener('click', () => {
+            if (!powerInterval) {
+                startPowerMeter();
+                shootBtn.textContent = 'Release!';
+                return;
+            }
+
+            clearInterval(powerInterval);
+            attempts++;
+
+            // Check if shot is good (power between 45-55% or 80-95%)
+            const isGood = (powerLevel >= 45 && powerLevel <= 55) || (powerLevel >= 80 && powerLevel <= 95);
+            
+            if (isGood) {
+                score++;
+                Utils.toast('🏀 Swish! Nice shot!', 'success');
+            } else {
+                Utils.toast('😅 Missed! Try again!', 'danger');
+            }
+
+            scoreEl.textContent = score;
+
+            if (attempts >= maxAttempts) {
+                setTimeout(() => this.finish(score, maxAttempts), 500);
+            } else {
+                powerLevel = 0;
+                powerDirection = 1;
+                powerInterval = null;
+                shootBtn.textContent = 'Shoot!';
+            }
+        });
+
+        status.textContent = `Attempt ${attempts + 1}/${maxAttempts}`;
+    },
+
+    /* ==================== MUSIC RHYTHM MINIGAME ==================== */
+    startMusic() {
+        const title = document.getElementById('minigame-title');
+        title.textContent = '🎵 Rhythm Game';
+
+        const area = document.getElementById('minigame-area');
+        const status = document.getElementById('minigame-status');
+
+        let score = 0;
+        const totalNotes = 15;
+        let notesPlayed = 0;
+
+        area.innerHTML = `
+            <div class="music-game">
+                <div class="music-track">
+                    <div class="note-lane" id="lane-1" data-key="A">
+                        <div class="target-zone">A</div>
+                    </div>
+                    <div class="note-lane" id="lane-2" data-key="S">
+                        <div class="target-zone">S</div>
+                    </div>
+                    <div class="note-lane" id="lane-3" data-key="D">
+                        <div class="target-zone">D</div>
+                    </div>
+                    <div class="note-lane" id="lane-4" data-key="F">
+                        <div class="target-zone">F</div>
+                    </div>
+                </div>
+                <div class="music-instructions">Press A, S, D, or F when notes reach the target!</div>
+                <div class="music-score">Score: <span id="music-score">0</span>/${totalNotes}</div>
+            </div>
+        `;
+
+        const lanes = ['lane-1', 'lane-2', 'lane-3', 'lane-4'];
+        const keys = ['a', 's', 'd', 'f'];
+        let gameActive = true;
+        const activeNotes = new Map();
+
+        const spawnNote = () => {
+            if (!gameActive) return;
+            
+            const laneId = Utils.randFrom(lanes);
+            const lane = document.getElementById(laneId);
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.textContent = '♪';
+            lane.appendChild(note);
+
+            const noteId = Date.now() + Math.random();
+            let position = 0;
+            activeNotes.set(noteId, { element: note, lane: laneId, hit: false });
+
+            const fallInterval = setInterval(() => {
+                position += 3;
+                note.style.top = position + 'px';
+
+                if (position > 350) {
+                    clearInterval(fallInterval);
+                    if (!activeNotes.get(noteId).hit) {
+                        Utils.toast('❌ Missed!', 'danger');
+                    }
+                    note.remove();
+                    activeNotes.delete(noteId);
+                    notesPlayed++;
+                    checkGameEnd();
+                }
+            }, 30);
+        };
+
+        const checkGameEnd = () => {
+            if (notesPlayed >= totalNotes) {
+                gameActive = false;
+                setTimeout(() => this.finish(score, totalNotes), 500);
+            }
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            const key = e.key.toLowerCase();
+            const keyIndex = keys.indexOf(key);
+            if (keyIndex === -1) return;
+
+            const laneId = lanes[keyIndex];
+            // Find notes in the target zone
+            for (const [noteId, noteData] of activeNotes.entries()) {
+                if (noteData.lane === laneId && !noteData.hit) {
+                    const notePos = parseInt(noteData.element.style.top || 0);
+                    if (notePos >= 280 && notePos <= 360) {
+                        noteData.hit = true;
+                        noteData.element.style.color = '#4caf50';
+                        score++;
+                        document.getElementById('music-score').textContent = score;
+                        Utils.toast('✨ Perfect!', 'success');
+                        break;
+                    }
+                }
+            }
+        });
+
+        // Spawn notes at intervals
+        const spawnInterval = setInterval(() => {
+            if (!gameActive) {
+                clearInterval(spawnInterval);
+                return;
+            }
+            spawnNote();
+        }, 1200);
+
+        status.textContent = 'Hit the notes with A, S, D, F!';
+    },
+
+    /* ==================== CODING CHALLENGE MINIGAME ==================== */
+    startCoding() {
+        const title = document.getElementById('minigame-title');
+        title.textContent = '💻 Coding Challenge';
+
+        const challenges = [
+            { 
+                question: 'What is the result of: 5 + 3 * 2?',
+                options: ['16', '11', '13', '10'],
+                answer: 1,
+                hint: 'Remember order of operations!'
+            },
+            {
+                question: 'Which loop runs at least once?',
+                options: ['for', 'while', 'do-while', 'foreach'],
+                answer: 2,
+                hint: 'Check the condition placement'
+            },
+            {
+                question: 'What does HTML stand for?',
+                options: ['Hyperlinks and Text Markup Language', 'HyperText Markup Language', 'Home Tool Markup Language', 'Hyperlinks Text Management Language'],
+                answer: 1,
+                hint: 'It\'s about marking up hypertext'
+            },
+            {
+                question: 'What is 1010 in binary as decimal?',
+                options: ['8', '10', '12', '14'],
+                answer: 1,
+                hint: '1010 = 8 + 0 + 2 + 0'
+            },
+            {
+                question: 'Which is NOT a programming language?',
+                options: ['Python', 'Java', 'HTML', 'Ruby'],
+                answer: 2,
+                hint: 'One is a markup language'
+            }
+        ];
+
+        const selectedChallenges = Utils.shuffle([...challenges]).slice(0, 4);
+        let currentQ = 0;
+        let score = 0;
+        const total = selectedChallenges.length;
+
+        const renderChallenge = () => {
+            const q = selectedChallenges[currentQ];
+            const area = document.getElementById('minigame-area');
+            const status = document.getElementById('minigame-status');
+            status.textContent = `Challenge ${currentQ + 1} of ${total}`;
+
+            area.innerHTML = `
+                <div class="coding-challenge">
+                    <div class="challenge-question">${Utils.escapeHtml(q.question)}</div>
+                    <div class="challenge-hint">💡 ${Utils.escapeHtml(q.hint)}</div>
+                    <div class="challenge-options">
+                        ${q.options.map((opt, i) => `
+                            <button class="challenge-option" data-index="${i}">${Utils.escapeHtml(opt)}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            area.querySelectorAll('.challenge-option').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const idx = parseInt(btn.dataset.index);
+                    const correct = idx === q.answer;
+
+                    area.querySelectorAll('.challenge-option').forEach(b => {
+                        b.disabled = true;
+                        if (parseInt(b.dataset.index) === q.answer) b.classList.add('correct');
+                        if (parseInt(b.dataset.index) === idx && !correct) b.classList.add('wrong');
+                    });
+
+                    if (correct) {
+                        score++;
+                        Utils.toast('✅ Correct! Nice coding!', 'success');
+                    } else {
+                        Utils.toast('❌ Not quite right', 'danger');
+                    }
+
+                    setTimeout(() => {
+                        currentQ++;
+                        if (currentQ < total) {
+                            renderChallenge();
+                        } else {
+                            this.finish(score, total);
+                        }
+                    }, 1500);
+                });
+            });
+        };
+
+        renderChallenge();
     }
 };

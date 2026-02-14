@@ -7,6 +7,7 @@ const Game = {
     player: null,
     currentNode: null,
     day: 1,
+    week: 1,
     period: 0,
     mode: 'story',        // 'story', 'sandbox', 'speedrun', 'random', 'whatif', 'tutorial'
     timedChoiceTimer: null,
@@ -14,6 +15,7 @@ const Game = {
     itemsBought: 0,
     clubsJoined: new Set(),
     playCount: 0,
+    year: 1,
 
     settings: {
         difficulty: 'normal',
@@ -306,8 +308,12 @@ const Game = {
             },
             money: 20,
             relationships: {},
+            romanceFlags: {},
+            skills: {},
             inventory: [],
-            flags: {}
+            flags: {},
+            jobHistory: [],
+            eventsAttended: []
         };
 
         // Apply personality bonuses
@@ -331,6 +337,8 @@ const Game = {
         }
 
         this.day = 1;
+        this.week = 1;
+        this.year = 1;
         this.period = 0;
         this.mode = 'story';
         this.itemsBought = 0;
@@ -360,10 +368,16 @@ const Game = {
             stats: { academics: 50, social: 50, energy: 80, stress: 20, happiness: 70, reputation: 50 },
             money: 50,
             relationships: {},
+            romanceFlags: {},
+            skills: {},
             inventory: [],
-            flags: {}
+            flags: {},
+            jobHistory: [],
+            eventsAttended: []
         };
         this.day = 1;
+        this.week = 1;
+        this.year = 1;
         this.period = 0;
         this.itemsBought = 0;
         this.clubsJoined = new Set();
@@ -401,10 +415,16 @@ const Game = {
             stats: { academics: 50, social: 50, energy: 80, stress: 20, happiness: 70, reputation: 50 },
             money: 20,
             relationships: {},
+            romanceFlags: {},
+            skills: {},
             inventory: [],
-            flags: {}
+            flags: {},
+            jobHistory: [],
+            eventsAttended: []
         };
         this.day = 1;
+        this.week = 1;
+        this.year = 1;
         this.period = 0;
 
         this.updateStatsUI();
@@ -746,7 +766,7 @@ const Game = {
             if (valEl) valEl.textContent = stats[key];
         });
 
-        document.getElementById('game-day').textContent = `📅 Day ${this.day}`;
+        document.getElementById('game-day').textContent = `📅 Week ${this.week}, Day ${((this.day - 1) % 5) + 1}`;
         document.getElementById('game-period').textContent = `🕐 ${GameData.periods[this.period] || 'Morning'}`;
         document.getElementById('game-money').textContent = `💰 $${this.player.money}`;
     },

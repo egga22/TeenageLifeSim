@@ -1055,14 +1055,25 @@ const Story = {
         },
 
         week3_parent_night_results: {
-            text: "📊 The night ends. Your parents' reaction depends on how you've been doing...\n\n" + 
-                  (Game && Game.player && Game.player.stats.academics >= 70 
-                    ? "👏 Your parents are PROUD! Teachers had great things to say! Your hard work paid off!"
-                    : Game && Game.player && Game.player.stats.academics >= 50
-                    ? "😊 Your parents are satisfied. Teachers said you're doing okay with room to improve."
-                    : "😬 Your parents are concerned. Teachers mentioned you need to focus more...") +
-                  "\n\nWeek 3 continues with new perspective!",
+            text: "📊 The night ends. Your parents' reaction depends on how you've been doing...",
             effects: { stress: -20 },
+            onEnter: () => {
+                const storyText = document.getElementById('story-text');
+                if (Game && Game.player) {
+                    let reaction = "";
+                    if (Game.player.stats.academics >= 70) {
+                        reaction = "\n\n👏 Your parents are PROUD! Teachers had great things to say! Your hard work paid off!";
+                    } else if (Game.player.stats.academics >= 50) {
+                        reaction = "\n\n😊 Your parents are satisfied. Teachers said you're doing okay with room to improve.";
+                    } else {
+                        reaction = "\n\n😬 Your parents are concerned. Teachers mentioned you need to focus more...";
+                    }
+                    reaction += "\n\nWeek 3 continues with new perspective!";
+                    if (storyText) {
+                        storyText.innerHTML = Utils.formatText("📊 The night ends. Your parents' reaction depends on how you've been doing..." + reaction);
+                    }
+                }
+            },
             choices: [
                 { text: "Continue Week 3", effects: {}, next: 'week3_day4_morning' }
             ]
@@ -1217,14 +1228,22 @@ const Story = {
         },
 
         week4_exam1_result: {
-            text: "📊 Exam 1 complete! You walk out feeling " + 
-                  (Game && Game.player && Game.player.stats.academics >= 70 
-                    ? "confident! You think you aced it! 🌟"
-                    : Game && Game.player && Game.player.stats.academics >= 50
-                    ? "okay. Could've been better, but not terrible. 😊"
-                    : "worried. That was rough... 😰") +
-                  "\n\nTwo more exams this week!",
+            text: "📊 Exam 1 complete! You walk out feeling...",
             effects: { stress: -10, energy: -15 },
+            onEnter: () => {
+                const storyText = document.getElementById('story-text');
+                if (Game && Game.player && storyText) {
+                    let feeling = "uncertain";
+                    if (Game.player.stats.academics >= 70) {
+                        feeling = "confident! You think you aced it! 🌟";
+                    } else if (Game.player.stats.academics >= 50) {
+                        feeling = "okay. Could've been better, but not terrible. 😊";
+                    } else {
+                        feeling = "worried. That was rough... 😰";
+                    }
+                    storyText.innerHTML = Utils.formatText("📊 Exam 1 complete! You walk out feeling " + feeling + "\n\nTwo more exams this week!");
+                }
+            },
             choices: [
                 { text: "Continue to Day 3", effects: {}, next: 'week4_day3_exam2' }
             ]
@@ -1292,16 +1311,16 @@ const Story = {
         },
 
         week4_reflection: {
-            text: "🌟 FOUR WEEKS COMPLETE!\n\nYou've:\n• Survived your first month of high school\n• Made lasting friendships\n• Possibly found romance\n• Joined clubs and developed skills\n• Attended Homecoming Dance\n• Survived Parent-Teacher Night\n• Conquered Midterm Exams\n\n" +
-                  (Game && Game.player ? 
-                    `💰 Money: $${Game.player.money}\n` +
-                    `📚 Academics: ${Game.player.stats.academics}\n` +
-                    `👥 Social: ${Game.player.stats.social}\n` +
-                    `😊 Happiness: ${Game.player.stats.happiness}\n` +
-                    `⭐ Reputation: ${Game.player.stats.reputation}`
-                    : "") +
-                  "\n\nThe school year continues, but this marks a major milestone!\n\nWinter break approaches, Year 2 awaits, and your legend is just beginning...",
+            text: "🌟 FOUR WEEKS COMPLETE!\n\nYou've:\n• Survived your first month of high school\n• Made lasting friendships\n• Possibly found romance\n• Joined clubs and developed skills\n• Attended Homecoming Dance\n• Survived Parent-Teacher Night\n• Conquered Midterm Exams\n\nThe school year continues, but this marks a major milestone!\n\nWinter break approaches, Year 2 awaits, and your legend is just beginning...",
             effects: { happiness: 30, confidence: 20 },
+            onEnter: () => {
+                const storyText = document.getElementById('story-text');
+                if (Game && Game.player && storyText) {
+                    const statsText = `\n\n💰 Money: $${Game.player.money}\n📚 Academics: ${Game.player.stats.academics}\n👥 Social: ${Game.player.stats.social}\n😊 Happiness: ${Game.player.stats.happiness}\n⭐ Reputation: ${Game.player.stats.reputation}`;
+                    const fullText = "🌟 FOUR WEEKS COMPLETE!\n\nYou've:\n• Survived your first month of high school\n• Made lasting friendships\n• Possibly found romance\n• Joined clubs and developed skills\n• Attended Homecoming Dance\n• Survived Parent-Teacher Night\n• Conquered Midterm Exams" + statsText + "\n\nThe school year continues, but this marks a major milestone!\n\nWinter break approaches, Year 2 awaits, and your legend is just beginning...";
+                    storyText.innerHTML = Utils.formatText(fullText);
+                }
+            },
             choices: [
                 { text: "📊 View my final stats and ending", effects: {}, next: '_ENDING' }
             ],
